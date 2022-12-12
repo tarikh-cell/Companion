@@ -11,7 +11,7 @@ export default function Location({ route, navigation }) {
     const [data, setData] = useState(value);
 
     const storeData = async () => {
-        try {
+        try {console.log(value)
             await AsyncStorage.setItem('@storage_Key', data)    
         } catch (e) {/* saving error */ }
     }
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
     headertext: {
         fontFamily: 'Raleway',
         fontSize: 18,
-        textAlign: 'center'
+        textAlign: 'center',
     },
     countrycontainer: {
         width: '85%',
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
         width: '75%',
         padding: 5,
         borderBottomWidth: 1,
-        borderColor: 'lightgrey'
+        borderColor: 'lightgrey',
     },
     countryname: {
         fontFamily: 'Raleway',

@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect, useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
+import Widget from '../Widget';
 
 export default function HomeScreen({ route, navigation }) {
     let [fontsLoaded] = useFonts({'Raleway': require('../assets/fonts/Raleway-Regular.ttf')});
@@ -31,13 +32,14 @@ export default function HomeScreen({ route, navigation }) {
         if (update) {setData(update)}
     }, [update])
     
-    if (!fontsLoaded) {
+    if (!fontsLoaded || (data == null)) {
       return <ActivityIndicator />;
     } else {
       return (
         <View style={styles.container}>
           <StatusBar style='auto' />
           <TopBar />
+          <Widget key={data} location={data} update={update} />
           <Text style={styles.text}>Home Screens</Text>
           <Text style={styles.text}>{data}</Text>
         </View>
