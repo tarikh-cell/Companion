@@ -1,64 +1,29 @@
-import { StyleSheet, Text, View, Button, ActivityIndicator, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, ScrollView, Image } from 'react-native';
 import { useFonts } from 'expo-font';
-import surah from '../surah/surah_18.json'
 import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
+
 export default function Reader() {
-    const [verses, setVerses] = useState(Object.values(surah.verse));
-    const [start, setStart] = useState('');
-    const [freeze, setFreeze] = useState(true);
-    const [text, setText] = useState('');
-    const [num, setNum] = useState(18);
+    let m = require('./index');
     let [fontsLoaded] = useFonts({'QM': require('../assets/fonts/Nabi.ttf')});
+    const [choice, setChoice] = useState(9);
+    const [verses, setVerses] = useState('');
+    const [freeze, setFreeze] = useState(true);
 
     useEffect(() => {
-        if (surah.index != "009" && freeze){
-            setStart(surah.verse.verse_0);
-            setVerses(verses.splice(1));
+        if (freeze){
+            setVerses(Object.values(m.default[choice].verse))
             setFreeze(false)
         }
     }, [freeze])
 
-    const fetchData = (num) => {
-        fetch('http://api.alquran.cloud/v1/surah/' + num , {
-          method: 'GET',
-        })
-          .then(response => response.json())
-          .then(json => {
-            setText(json.data)
-        })
-          .catch(error => {
-            console.error(error);
-          });
-    }
-
-    const getInfo = () => {
-        fetchData(num);
-        let pagenum = text.ayahs[0].page;
-        let start = text.ayahs[0].numberInSurah;
-        let end = 0
-        console.log('"' + "start" + '"' + " : " + text.ayahs[0].page + ",");
-        console.log('"' + "pages" + '"' + ": {")
-        for (let i = 0; i < text.numberOfAyahs; i++){
-            let newPageNum = text.ayahs[i].page;
-            if (pagenum !== newPageNum){
-                end = text.ayahs[i-1].numberInSurah
-                console.log('"' + text.ayahs[i-1].page + '": ' + end + ",")
-                start = text.ayahs[i].numberInSurah;
-                pagenum = newPageNum;
-            }
-        }
-        console.log('"' + '"' + ":  " + text.numberOfAyahs)
-        console.log("},")
-    }
-    
     const returnSurah = () => {
         let ayat = '';
-        let page = surah.start;
-        for(let i = 0; i < surah.count; i++){
+        let page = m.default[choice].start;
+        for(let i = 1; i < m.default[choice].count; i++){
             const arabic  = " (" + convertInt(String(i+1)) + ") "; 
             ayat = ayat + verses[i] + arabic + "";  
-            if (surah.pages[page] == i+1) {
+            if (m.default[choice].pages[page] == i+1) {
                 ayat += "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\r";
                 ayat += "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀" + page + "\n\n";
                 page = String(parseInt(page) + 1)
@@ -87,17 +52,9 @@ export default function Reader() {
         return(
             <View style={styles.container}>
                 <StatusBar style='transparent' />
-                <Button title="work" onPress={() => {setNum(num+1);getInfo()}} />
-                <Button title="work" onPress={() => {setNum(num+1);getInfo()}} />
-                <Button title="work" onPress={() => {setNum(num+1);getInfo()}} />
-                
                 <ScrollView contentContainerStyle={{justifyContent: 'center'}}>
-                    {/* <Text style={styles.text}>{start}</Text> */}
                     <Image source={require('../assets/bismillah0.png')} style={styles.img} />
                     <Text style={styles.text}>{returnSurah()}</Text>
-                    {/* {verses.map((value, key) => {
-                        return(<Text key={key} style={styles.text}>{value}</Text>);
-                    })} */}
                 </ScrollView>
             </View>
     )}
@@ -109,7 +66,8 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         justifyContent: 'center',
         // backgroundColor: 'rgba(228, 247, 143, 0.3)'
-        backgroundColor: 'rgba(0, 250, 154, 0.1)'
+        backgroundColor: 'rgba(0, 250, 154, 0.1)',
+        paddingTop: '10%'
     },
     img: {
         width: '60%',

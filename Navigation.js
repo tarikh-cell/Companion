@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
     },
     item: {
         padding: 10,
+        position: 'relative'
     },
     specialItem: {
         backgroundColor: '#00FA9A',
