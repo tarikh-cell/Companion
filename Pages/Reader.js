@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Button, ActivityIndicator, ScrollView, Image } from 'react-native';
 import { useFonts } from 'expo-font';
-import surah from '../surah/surah_2.json'
+import surah from '../surah/surah_18.json'
 import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 export default function Reader() {
@@ -8,6 +8,7 @@ export default function Reader() {
     const [start, setStart] = useState('');
     const [freeze, setFreeze] = useState(true);
     const [text, setText] = useState('');
+    const [num, setNum] = useState(18);
     let [fontsLoaded] = useFonts({'QM': require('../assets/fonts/Nabi.ttf')});
 
     useEffect(() => {
@@ -25,7 +26,6 @@ export default function Reader() {
           .then(response => response.json())
           .then(json => {
             setText(json.data)
-            // console.log(json.data)
         })
           .catch(error => {
             console.error(error);
@@ -33,21 +33,23 @@ export default function Reader() {
     }
 
     const getInfo = () => {
-        fetchData(2);
+        fetchData(num);
         let pagenum = text.ayahs[0].page;
         let start = text.ayahs[0].numberInSurah;
         let end = 0
-
-        for (let i = 1; i < text.numberOfAyahs; i++){
+        console.log('"' + "start" + '"' + " : " + text.ayahs[0].page + ",");
+        console.log('"' + "pages" + '"' + ": {")
+        for (let i = 0; i < text.numberOfAyahs; i++){
             let newPageNum = text.ayahs[i].page;
             if (pagenum !== newPageNum){
                 end = text.ayahs[i-1].numberInSurah
-                console.log('"' + text.ayahs[i].page + '": ' + end + ",")
+                console.log('"' + text.ayahs[i-1].page + '": ' + end + ",")
                 start = text.ayahs[i].numberInSurah;
                 pagenum = newPageNum;
             }
         }
-        console.log('":"' + ",  " + text.numberOfAyahs)
+        console.log('"' + '"' + ":  " + text.numberOfAyahs)
+        console.log("},")
     }
     
     const returnSurah = () => {
@@ -85,7 +87,9 @@ export default function Reader() {
         return(
             <View style={styles.container}>
                 <StatusBar style='transparent' />
-                <Button title="work" onPress={() => getInfo()} />
+                <Button title="work" onPress={() => {setNum(num+1);getInfo()}} />
+                <Button title="work" onPress={() => {setNum(num+1);getInfo()}} />
+                <Button title="work" onPress={() => {setNum(num+1);getInfo()}} />
                 
                 <ScrollView contentContainerStyle={{justifyContent: 'center'}}>
                     {/* <Text style={styles.text}>{start}</Text> */}
@@ -114,7 +118,7 @@ const styles = StyleSheet.create({
     },
     text: {
         fontFamily: 'QM',
-        fontSize: 21,
+        fontSize: 20,
         textAlign: 'justify',
         padding: 10,
     }
