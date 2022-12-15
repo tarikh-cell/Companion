@@ -9,7 +9,7 @@ import Widget from '../Widget';
 export default function HomeScreen({ route, navigation }) {
     let [fontsLoaded] = useFonts({'Raleway': require('../assets/fonts/Raleway-Regular.ttf')});
     const { update } = route?.params || {};
-    const [data, setData] = useState(null);
+    const [data, setData] = useState("United Kingdom, London");
 
     const getData = async () => {
         try {

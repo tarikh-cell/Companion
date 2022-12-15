@@ -1,19 +1,36 @@
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, Feather } from '@expo/vector-icons';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
 export default function Navigation() {
     const [select, setSelect] = useState(0);
+    const [hide, setHide] = useState(true);
+    const open = { width: '95%' }
+    const closed = { alignSelf: 'flex-end', right: 10 }
     return (
-      <View style={styles.container}>    
+      <View style={[styles.container, hide ? open : closed ]}> 
+        { hide ?
+        <>
         <Item route="Reader" itemStyle={styles.item}  name="book-outline" index={1} num={select} setNum={setSelect} />
         <Item route="Reader" itemStyle={styles.item}  name="barcode-outline" index={2} num={select} setNum={setSelect} />
         <Item route="Home" itemStyle={styles.specialItem} itemBg={styles.specialBackground} name="home-outline" index={0} num={select} setNum={setSelect} />
         <Item route="Reader" itemStyle={styles.item} name="compass-outline" index={3} num={select} setNum={setSelect} />
-        <Item route="Reader" itemStyle={styles.item} name="albums-outline" index={4} num={select} setNum={setSelect} />
+        </>
+         : null }
+        <CloseItem itemStyle={styles.item} name="minimize" alt="maximize" hide={hide} setHide={setHide} />
       </View>
     );
+}
+
+function CloseItem({ itemStyle, itemBg, name, alt, hide, setHide }) {
+  return(
+    <View style={itemBg}>
+      <TouchableOpacity style={itemStyle} onPress={() => setHide(!hide)}>
+        <Feather name={hide ? name : alt} size={30} color={hide ? '#000' : '#fff'} />
+      </TouchableOpacity>
+    </View>
+  );
 }
 
 function Item({ route, itemStyle, itemBg, name, index, num, setNum }) {
@@ -31,7 +48,6 @@ const styles = StyleSheet.create({
     container: {
         alignSelf: 'center',
         position: 'absolute',
-        width: '95%',
         bottom: 10,
         flexDirection: 'row',
         backgroundColor: '#2F4F4F',
