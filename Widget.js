@@ -31,7 +31,6 @@ export default function Widget({ location, update }) {
         })
           .then(response => response.json())
           .then(json => {
-            // json.data.date.hijri.day + " " + json.data.date.hijri.month.en + " " + json.data.date.hijri.year
             setTimes(json.data.timings);
             setLoading(false);   
         })

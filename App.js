@@ -5,6 +5,7 @@ import Settings from './Pages/Settings';
 import Location from './Pages/Location';
 import Navigation from './Navigation';
 import Reader from './Pages/Reader';
+import Player from './Pages/Player';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
         <Stack.Screen name="Settings" component={Settings} />
         <Stack.Screen name="Reader" component={Reader} />
         <Stack.Screen name="Location" component={Location} />
+        <Stack.Screen name="Player" component={Player} />
       </Stack.Navigator>
       <Navigation />
     </NavigationContainer>

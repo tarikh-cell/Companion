@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View, ActivityIndicator, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, ScrollView, Image, TouchableOpacity, Modal } from 'react-native';
 import { useFonts } from 'expo-font';
-import { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, memo } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Feather } from '@expo/vector-icons';
-import surahList from '../info.json';
+import surahList from '../surahList.json';
 
 export default function Reader() {
     let m = require('./index');
@@ -12,6 +12,8 @@ export default function Reader() {
     const [choice, setChoice] = useState(1);
     const [verses, setVerses] = useState('');
     const [freeze, setFreeze] = useState(true);
+    const [dark, setDark] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         if (freeze){
@@ -69,7 +71,10 @@ export default function Reader() {
                     <Feather name="arrow-left" size={25} color='#fff' />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.item}>
-                    <Feather name="menu" size={25} color='#fff' onPress={() => {setChoice(null); setFreeze(false)}} />
+                    <Feather name="moon" size={25} color={dark ? '#000' : '#fff'} onPress={() => setDark(!dark)} />
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.item}>
+                    <Feather name="menu" size={25} color='#fff' onPress={() => setModalVisible(!modalVisible)} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.item} onPress={() => setChoices(choice + 1)}>
                     <Feather name="arrow-right" size={25} color='#fff' />
@@ -78,16 +83,33 @@ export default function Reader() {
         );
     }
 
-    const Select = ({id}) => {
+    const Select = ({id, value}) => {
         return(
-            <TouchableOpacity style={styles.surah}>
-                <Text>{surahList[id].id}</Text>
-                <Text style={{borderWidth: 1}}>{surahList[id].name}</Text>
-                <Text>{surahList[id].translation}</Text>
-                <Text>{surahList[id].transliteration}</Text>
-                <Text>{surahList[id].type}</Text>
-                <Text>{surahList[id].total_verses}</Text>
+            <TouchableOpacity style={{width: '100%', flexDirection: 'row'}} onPress={() => {setChoices(id+1); setModalVisible(!modalVisible)}} >
+                <Text style={[styles.listtext, {flex: 2}]}>{value[0]}</Text><Text style={[styles.listtext, {flex: 3}]}>{value[1]}</Text>
             </TouchableOpacity>
+        );
+    }
+
+    const SurahSelect = () => {
+        return(
+            <Modal animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => setModalVisible(!modalVisible)}>
+                <View style={styles.surahlist}>
+                    <ScrollView contentContainerStyle={{justifyContent: 'center'}}>
+                        {Object.entries(surahList).map((value, index) => {
+                            return <Select key={index} id={index} value={value} />
+                        })}
+                    </ScrollView>
+                    <View style={{alignSelf: 'center'}}>
+                        <TouchableOpacity style={styles.item}>
+                            <Feather name="x-circle" size={25} color='#fff' onPress={() => setModalVisible(!modalVisible)} />
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
         );
     }
 
@@ -95,17 +117,17 @@ export default function Reader() {
         return (
             <View style={styles.container}>
                 <Text style={styles.title}>Surah</Text>
-                <Select id={1} />
             </View>
         );
       } else {
         return(
-            <View style={styles.container}>
+            <View style={[styles.container, {backgroundColor: dark ? '#000' : 'rgba(0, 250, 154, 0.1)'} ]}>
                 <StatusBar style='transparent' />
                 <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={true} contentContainerStyle={{flexGrow: 1, justifyContent: 'center'}}>
-                    <Image source={require('../assets/bismillah.png')} style={styles.img} />
-                    <Text style={styles.text}>{returnSurah()}</Text>
+                    { dark ? <Image source={require('../assets/bismillah-white.png')} style={styles.img} /> : <Image source={require('../assets/bismillah.png')} style={styles.img} />}
+                    <Text style={[styles.text, {color: dark ? '#fff' : '#000'} ]}>{returnSurah()}</Text>
                 </ScrollView>
+                <SurahSelect />
                 <ToolBar />
             </View>
     )}
@@ -127,7 +149,7 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     img: {
-        width: '60%',
+        width: '80%',
         height: 90,
         alignSelf: 'center',
     },
@@ -151,15 +173,30 @@ const styles = StyleSheet.create({
         position: 'relative'
     },
     surah: {
-        borderWidth: 1,
-        borderRadius: 12,
-        paddingVertical: 5,
-        paddingHorizontal: 10,
-        borderColor: '#8899A6'
+        width: '40%',
+        backgroundColor: 'rgba(0,0,0,0.2)',
+        borderRadius: 8,
+        margin: 10,
+        borderColor: '#00FA9A'
     },
     surahlist: {
         fontFamily: 'Raleway',
-        fontSize: 20,
-        textAlign: 'center'
+        height: '50%', 
+        width: '60%', 
+        backgroundColor: '#2F4F4F', 
+        alignSelf: 'center', 
+        bottom: 10, 
+        position: 'absolute', 
+        padding: 5,
+        borderRadius: 12,
+    },
+    listtext: {
+        flex: 1,
+        textAlign: 'center',
+        color: '#fff',
+        padding: 5,
+        justifyContent: 'space-evenly',
     }
 });
+
+memo(Reader)

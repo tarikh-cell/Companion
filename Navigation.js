@@ -13,7 +13,7 @@ export default function Navigation() {
         { hide ?
         <>
         <Item route="Reader" itemStyle={styles.item}  name="book-outline" index={1} num={select} setNum={setSelect} />
-        <Item route="Reader" itemStyle={styles.item}  name="barcode-outline" index={2} num={select} setNum={setSelect} />
+        <Item route="Player" itemStyle={styles.item}  name="barcode-outline" index={2} num={select} setNum={setSelect} />
         <Item route="Home" itemStyle={styles.specialItem} itemBg={styles.specialBackground} name="home-outline" index={0} num={select} setNum={setSelect} />
         <Item route="Reader" itemStyle={styles.item} name="compass-outline" index={3} num={select} setNum={setSelect} />
         </>
