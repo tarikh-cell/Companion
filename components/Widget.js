@@ -1,9 +1,8 @@
-import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, ImageBackground, ScrollView, RefreshControl, Image } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, ScrollView, RefreshControl } from 'react-native';
 import { useEffect, useState, useCallback } from 'react';
 import { Ionicons } from '@expo/vector-icons';
-import { LinearGradient } from 'expo-linear-gradient';
 
-export default function Widget({ location, update }) {
+export default function Widget({ location }) {
     const [data, setData] = useState(location.split(","));
     const [times, setTimes] = useState(''); 
     const [loading, setLoading] = useState(true); 
@@ -164,18 +163,31 @@ export default function Widget({ location, update }) {
     } else {
       return(
         <View style={styles.card}>
-            <ScrollView style={styles.container} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-                    {/* <Image source={require('./assets/0.jpg')} blurRadius={10} style={styles.card_img} /> */}
-                    <LinearGradient colors={['rgba(0, 250, 154, 0.9)', 'rgba(0,250,154, 0.5)']} style={styles.bg}>   
-                        <View style={{width: '100%', flexDirection: 'row', padding: 7, justifyContent: 'space-between'}}>
-                            <Text style={[styles.text, {}]}>{getCurrentPrayer()}</Text>  
-                            <Text style={styles.text}>{data[0]}, {data[1]}</Text>
-                        </View>
-                        <Text style={styles.text}>{}</Text>
-                        <Text style={[styles.text, {fontSize: 40}]}>{checkTimeLeft()}{getSecs()}</Text>
-                        <Text style={styles.text}>untill</Text>
-                        <Text style={styles.text}>{getNextPrayer()} at {getNextPrayerTime()}</Text>
-                    </LinearGradient>  
+            <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center'}} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+                <View style={{padding: 30, borderRadius: 25, backgroundColor: '#fff', width: '80%', elevation: 5}}>
+                    <Ionicons name="notifications" size={14} color="#e8def5" style={{alignSelf: 'flex-end'}} />
+                    <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                    <View>
+                    <Text style={[styles.text, {fontSize: 17}]}>{getNextPrayer()} </Text>
+                    <Text style={[styles.text, {fontSize: 20, color: '#4dc591'}]}>{checkTimeLeft()}{getSecs()}</Text>
+                    <Text style={[styles.text, {fontSize: 15, color: '#e8def5'}]}>at {getNextPrayerTime()}</Text>
+                    </View>
+                    <View>
+                    <Text style={[styles.text, {fontSize: 17}]}>Now:</Text>
+                    <Text style={[styles.text, {fontSize: 20, color: '#4dc591'}]}>{getCurrentPrayer()}</Text>
+                    <Text style={[styles.text, {fontSize: 15, color: '#e8def5'}]}>at {getNextPrayerTime()}</Text>
+                    </View>
+                    </View>
+                    <Text style={[styles.text,{fontSize: 20}]}>Wednesday, 16th April 2</Text>
+                    <Text style={[styles.text, {fontSize: 12, marginTop: 5, color: '#e8def5'}]}><Ionicons name="location" size={12} color="#e8def5" />{data[0]}, {data[1]}</Text> 
+                </View>
+                {/* <View style={{flexDirection: 'row', padding: 10, justifyContent: 'space-evenly', margin: 5, borderRadius: 12}}>
+                    <Text style={styles.text}>Fajr{'\n'}{times.Fajr}</Text>
+                    <Text style={styles.text}>Dhuhr{'\n'}{times.Dhuhr}</Text>
+                    <Text style={styles.text}>Asr{'\n'}{times.Asr}</Text>
+                    <Text style={styles.text}>Maghrib{'\n'}{times.Maghrib}</Text>
+                    <Text style={styles.text}>Isha{'\n'}{times.Isha}</Text>
+                </View> */}
             </ScrollView>
         </View>
     )}
@@ -184,24 +196,19 @@ export default function Widget({ location, update }) {
 const styles = StyleSheet.create({
     container: {
         height: '100%',
-        overflow: 'hidden',
     },
     bg: {
         height: '100%',
         width: '100%',
-        borderRadius: 20,
     },
     card: {
+        height: '35%',
+        width: '100%',
         paddingTop: '5%',
-        height: '25%',
-        width: '90%',
-    },
-    card_img: {
-        width: '100%', 
-        height: '100%',
     },
     text: {
         fontFamily: 'Raleway',
-        alignSelf: 'center'
+        alignSelf: 'center',
+        textAlign: 'center'
     }
 });

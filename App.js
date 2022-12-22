@@ -6,6 +6,7 @@ import Location from './Pages/Location';
 import Navigation from './Navigation';
 import Reader from './Pages/Reader';
 import Player from './Pages/Player';
+import Counter from './Pages/Counter';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -17,6 +18,7 @@ export default function App() {
         <Stack.Screen name="Reader" component={Reader} />
         <Stack.Screen name="Location" component={Location} />
         <Stack.Screen name="Player" component={Player} />
+        <Stack.Screen name="Counter" component={Counter} />
       </Stack.Navigator>
       <Navigation />
     </NavigationContainer>

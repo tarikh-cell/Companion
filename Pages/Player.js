@@ -1,10 +1,11 @@
 import { StyleSheet, Text, View, ActivityIndicator, ScrollView, Image, TouchableOpacity, Modal } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { Feather } from '@expo/vector-icons';
-import surahList from '../surahList.json';
-import audioa from '../sheikhmaher';
-import audioy from '../sheikhyasser';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Slider from '@react-native-community/slider';
+import surahList from '../data/surahList.json';
+import audioa from '../data/sheikhmaher';
+import audioy from '../data/sheikhyasser';
 import { Audio } from 'expo-av';
 
 export default function Player() {
@@ -14,6 +15,8 @@ export default function Player() {
     const [choice, setChoice] = useState(0); 
     const [loaded, setLoaded] = useState(false);
     const [playing, setPlaying] = useState(false);
+    const [duration, setDuration] = useState(null);
+    const [position, setPosition] = useState(0);
     const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
@@ -26,7 +29,7 @@ export default function Player() {
             })
         } catch(e){ console.log(e) }}
         loadAudio();
-        return () => {audio.unloadAsync()}
+        return () => {if (loaded) audio.unloadAsync()}
     }, [close])
 
     const playSound = async () => {
@@ -39,8 +42,14 @@ export default function Player() {
             setLoaded(true);
         }      
         await audio.playAsync();
+        audio.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate)
         setPlaying(true);
     }
+
+    const onPlaybackStatusUpdate = status => {
+        setDuration(status.durationMillis);
+        setPosition(status.positionMillis);
+      }
 
     const pauseSound = async () => {
         await audio.pauseAsync();
@@ -83,6 +92,23 @@ export default function Player() {
         );
     }
 
+    const addZero = (number) => {
+        let digit = String(number)
+        if (number < 10) {
+          return "0" + digit;
+        }
+        return digit;
+    }
+
+    const convertToMinutes = (millis) => {
+        let totalSeconds = millis / 1000;
+        let seconds = Math.floor(totalSeconds % 60);
+        let minutes = Math.floor(totalSeconds / 60);
+        seconds = addZero(seconds);
+        minutes = addZero(minutes);
+        return minutes + ":" + seconds
+      }
+
     return(
         <View style={styles.container}>
             <StatusBar style='transparent' />
@@ -96,14 +122,35 @@ export default function Player() {
                     onRequestClose={() => setModalVisible(!modalVisible)}>
                 <View style={styles.container}>
                     <TouchableOpacity>
-                        <Feather name="x-circle" size={25} color='#fff' onPress={() => {setModalVisible(!modalVisible);}} />
+                        <MaterialCommunityIcons name="close" size={40} color='silver' onPress={() => {setModalVisible(!modalVisible); setLoaded(false); audio.unloadAsync()}} />
                     </TouchableOpacity>
-                    <TouchableOpacity>
-                        { playing ? <Feather name="pause" size={25} color='#fff' onPress={pauseSound} /> : <Feather name="play" size={25} color='#fff' onPress={playSound} /> }
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => {skipTrack(); setNextIndex(index+1)}}>
-                        <Feather name="skip-forward" size={25} color='#fff' />
-                    </TouchableOpacity>
+                    <Image source={require("../assets/op.jpg")} style={styles.img} />
+                    <Slider 
+                        style={{width: '90%', marginTop: 40}}
+                        value={position}
+                        onSlidingComplete={(value) => audio.setPositionAsync(value)}
+                        minimumValue={0}
+                        maximumValue={duration}
+                        thumbTintColor="silver"
+                        minimumTrackTintColor="grey"
+                        maximumTrackTintColor="silver"
+                    />
+                    {console.log(surahList[index])}
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '80%'}}>
+                        <Text style={{color: 'silver'}}>{convertToMinutes(position)}</Text>
+                        <Text style={{color: 'silver'}}>{convertToMinutes(duration)}</Text>
+                    </View>
+                    <View style={{flexDirection: 'row'}}>
+                        <TouchableOpacity onPress={() => {skipTrack(); setNextIndex(index+1)}}>
+                            <MaterialCommunityIcons name="skip-backward" size={40} color='silver' />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            { playing ? <MaterialCommunityIcons name="pause" size={40} color='silver' onPress={pauseSound} /> : <MaterialCommunityIcons name="play" size={40} color='silver' onPress={playSound} /> }
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {skipTrack(); setNextIndex(index+1)}}>
+                            <MaterialCommunityIcons name="skip-forward" size={40} color='silver' />
+                        </TouchableOpacity>
+                    </View>
                 </View>
             </Modal>
         </View>
@@ -116,16 +163,22 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         justifyContent: 'center',
         paddingTop: '10%',
-        backgroundColor: '#2F4F4F', 
+        backgroundColor: '#000', 
     },
     title: {
         fontFamily: 'Raleway',
         fontSize: 20,
     },
     img: {
-        width: '80%',
-        height: 90,
-        alignSelf: 'center',
+        width: 300,
+        height: 300,
+        elevation: 20,
+        shadowColor: 'black',
+        shadowOpacity: 1,
+        shadowOffset: {width: 2, height: 2},
+        shadowRadius: 10,
+        // borderRadius: 150,
+        // alignSelf: 'center',
     },
     surahlist: {
         fontFamily: 'Raleway',

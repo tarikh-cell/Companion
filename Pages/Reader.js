@@ -3,10 +3,10 @@ import { useFonts } from 'expo-font';
 import React, { useEffect, useState, useRef, memo } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Feather } from '@expo/vector-icons';
-import surahList from '../surahList.json';
+import surahList from '../data/surahList.json';
 
 export default function Reader() {
-    let m = require('./index');
+    let m = require('../data/index');
     let [fontsLoaded] = useFonts({'QM': require('../assets/fonts/Nabi.ttf')});
     const scrollViewRef = useRef();
     const [choice, setChoice] = useState(1);

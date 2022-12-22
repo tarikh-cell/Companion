@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, Button, TouchableOpacity, Image, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState } from 'react';
-import cities from '../Data/cities';
+import cities from '../data/cities';
 import { Ionicons } from '@expo/vector-icons';
 
 
