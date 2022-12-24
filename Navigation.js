@@ -1,5 +1,5 @@
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { Ionicons, Feather } from '@expo/vector-icons';
+import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { Ionicons, Feather, Octicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
@@ -12,13 +12,13 @@ export default function Navigation() {
       <View style={[styles.container, hide ? open : closed ]}> 
         { hide ?
         <>
-        <Item route="Reader" itemStyle={styles.item}  name="book-outline" index={1} num={select} setNum={setSelect} />
-        <Item route="Player" itemStyle={styles.item}  name="barcode-outline" index={2} num={select} setNum={setSelect} />
-        <Item route="Home" itemStyle={styles.specialItem} itemBg={styles.specialBackground} name="home-outline" index={0} num={select} setNum={setSelect} />
-        <Item route="Counter" itemStyle={styles.item} name="compass-outline" index={3} num={select} setNum={setSelect} />
+          <Item route="Reader" itemStyle={styles.item}  name="book" index={1} num={select} setNum={setSelect} />
+          <Item route="Player" itemStyle={styles.item}  name="meter" index={2} num={select} setNum={setSelect} />
+          <Item route="Home" itemStyle={styles.item} name="home" index={0} num={select} setNum={setSelect} />
+          <Item route="Counter" itemStyle={styles.item} name="project" index={3} num={select} setNum={setSelect} />
         </>
          : null }
-        <CloseItem itemStyle={styles.item} name="minimize" alt="maximize" hide={hide} setHide={setHide} />
+        <CloseItem itemStyle={styles.item} name="stack" alt="grabber" hide={hide} setHide={setHide} />
       </View>
     );
 }
@@ -27,7 +27,7 @@ function CloseItem({ itemStyle, itemBg, name, alt, hide, setHide }) {
   return(
     <View style={itemBg}>
       <TouchableOpacity style={itemStyle} onPress={() => setHide(!hide)}>
-        <Feather name={hide ? name : alt} size={25} color={hide ? '#000' : '#fff'} />
+        <Octicons name={hide ? name : alt} size={20} color={'#000'} />  
       </TouchableOpacity>
     </View>
   );
@@ -36,11 +36,9 @@ function CloseItem({ itemStyle, itemBg, name, alt, hide, setHide }) {
 function Item({ route, itemStyle, itemBg, name, index, num, setNum }) {
   const navigation = useNavigation();
   return(
-    <View style={itemBg}>
-      <TouchableOpacity style={itemStyle} onPress={() => {setNum(index); navigation.navigate(route);}}>
-        <Ionicons name={name} size={25} color={num == index ? '#fff' : '#000'} />
-      </TouchableOpacity>
-    </View>
+    <TouchableOpacity style={[itemStyle, {backgroundColor: index == num ? '#e3f6fd' : 'transparent', opacity: 0.7}]} onPress={() => {setNum(index); navigation.navigate(route);}}>
+      <Octicons name={name} size={20} color={'#000'} />
+    </TouchableOpacity>
   );
 }
 
@@ -54,10 +52,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-evenly',
         // borderRadius: 50,
+        marginBottom: 10
     },
     item: {
-        padding: 10,
-        position: 'relative'
+        padding: 11,
+        position: 'relative',
+        borderBottomEndRadius: 25,
+        borderBottomStartRadius: 40,
+        borderTopEndRadius: 50,
+        borderTopStartRadius: 25,
     },
     specialItem: {
         backgroundColor: '#00FA9A',

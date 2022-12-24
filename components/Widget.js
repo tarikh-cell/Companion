@@ -164,7 +164,7 @@ export default function Widget({ location }) {
       return(
         <View style={styles.card}>
             <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center'}} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-                <View style={{padding: 30, borderRadius: 25, backgroundColor: '#fff', width: '80%', elevation: 5}}>
+                <View style={{padding: 30, borderRadius: 25, backgroundColor: '#fff', width: '80%', elevation: 5, marginBottom: 4,}}>
                     <Ionicons name="notifications" size={14} color="#e8def5" style={{alignSelf: 'flex-end'}} />
                     <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
                     <View>
@@ -179,7 +179,7 @@ export default function Widget({ location }) {
                     </View>
                     </View>
                     <Text style={[styles.text,{fontSize: 20}]}>Wednesday, 16th April 2</Text>
-                    <Text style={[styles.text, {fontSize: 12, marginTop: 5, color: '#e8def5'}]}><Ionicons name="location" size={12} color="#e8def5" />{data[0]}, {data[1]}</Text> 
+                    <Text style={[styles.text, {fontSize: 12, marginTop: 5, color: '#308695'}]}><Ionicons name="location" size={12} color="#308695" />{data[0]}, {data[1]}</Text> 
                 </View>
                 {/* <View style={{flexDirection: 'row', padding: 10, justifyContent: 'space-evenly', margin: 5, borderRadius: 12}}>
                     <Text style={styles.text}>Fajr{'\n'}{times.Fajr}</Text>
@@ -195,14 +195,10 @@ export default function Widget({ location }) {
 
 const styles = StyleSheet.create({
     container: {
-        height: '100%',
-    },
-    bg: {
-        height: '100%',
-        width: '100%',
+        // height: '100%',
+        
     },
     card: {
-        height: '35%',
         width: '100%',
         paddingTop: '5%',
     },

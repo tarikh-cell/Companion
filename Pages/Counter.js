@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
         flex: 1, 
         alignItems: 'center', 
         paddingTop: '10%',
+        backgroundColor: '#fff'
     },
     card: {     
         width: '90%',

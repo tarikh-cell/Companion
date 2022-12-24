@@ -1,48 +1,37 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, ImageBackground, Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import SettingsContext from '../SettingsContext';
 import { Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import Widget from '../components/Widget';
 import Cards from '../components/Cards';
 
 
-export default function HomeScreen({ route, navigation }) {
+export default function HomeScreen({ navigation }) {
     let [fontsLoaded] = useFonts({'Raleway': require('../assets/fonts/Raleway-Regular.ttf')});
-    const { update } = route?.params || {};
-    const [data, setData] = useState("United Kingdom, London");
-
-    const getData = async () => {
-        try {
-          const value = await AsyncStorage.getItem('@storage_Key')
-          setData(value);
-        } catch(e) {/* error reading value */ }
-    }
+    const [data, setData] = useState(null);
+    const { settings, setSettings } = useContext(SettingsContext);
 
     const TopBar = () => {
       return(
         <View style={styles.topbar}>
           <TouchableOpacity style={styles.btnPress} onPress={() => navigation.navigate('Settings', {value: data})}><Image source={require('../assets/icons/menu.png')} style={{width: '100%', height: '100%'}} /></TouchableOpacity>
-          {/* <TouchableOpacity style={styles.btnPress} onPress={() => navigation.navigate('Location', {value: data})}><Ionicons name="location-outline" size={30} color="#000" /></TouchableOpacity> */}
         </View>
       );
     }
-
-    useEffect(() => {
-        if (data == null) {getData()}
-        if (update) {setData(update)}
-    }, [update])
     
-    if (!fontsLoaded || (data == null)) {
+    if (!fontsLoaded) {
       return <ActivityIndicator />;
     } else {
       return (
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: settings[2] == "true" ? "#000" : "#fff"}]}>
           <StatusBar style='auto' />
             <View style={styles.background}></View>
+            {console.log(settings)}
             <TopBar />
-            <Widget key={data} location={data} />
+            {/* <Widget key={data} location={data} /> */}
             {/* <Cards /> */}
         </View>
     )}
@@ -62,9 +51,13 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     btnPress: {
+        margin: 5,
         padding: 5,
-        width: 40,
-        height: 40,
+        width: 35,
+        height: 35,
+        borderWidth: 1,
+        borderColor: '#e8def5',
+        borderRadius: 5,
     },
     text: {
         fontFamily: 'Raleway',
