@@ -6,15 +6,10 @@ import { Octicons } from '@expo/vector-icons';
 import cities from '../data/cities';
 import SettingsContext from '../SettingsContext';
 
-export default function Settings({ route, navigation }) {
-    const { value } = route.params;
-    const [data, setData] = useState(value);
+export default function Settings({ navigation }) {
     const [open, setOpen] = useState(false);
-
-    const [locationData, setLocationData] = useState(value);
     const [dark, setDark] = useState(false);
-
-    const { settings, updateSettings } = useContext(SettingsContext);
+    const { settings, updateSettings, updateLocation } = useContext(SettingsContext);
 
     const storeData = async () => {
         try {
@@ -28,7 +23,7 @@ export default function Settings({ route, navigation }) {
           <>
               <TouchableOpacity style={styles.countrycontainer} onPress={() => setOpen(!open)}><Text style={styles.countryname}>{country.name}</Text></TouchableOpacity>
               {open && country.city.map((value, index) =>
-                  <TouchableOpacity style={styles.citycontainer} key={index} onPress={() => {setLocationData(country.name + "," + value); setOpen(!open);}}>
+                  <TouchableOpacity style={styles.citycontainer} key={index} onPress={() => {updateLocation(country.name, value); setOpen(!open);}}>
                     <Text style={styles.countryname}>{value}</Text></TouchableOpacity>
               )}
           </>
@@ -48,7 +43,7 @@ export default function Settings({ route, navigation }) {
   const Topbar = () => {
     return(
       <View style={styles.topbar}>
-        <TouchableOpacity style={styles.btnPress} onPress={() => navigation.navigate('Home', {update: data})}>
+        <TouchableOpacity style={styles.btnPress} onPress={() => navigation.navigate('Home')}>
           <Octicons name="arrow-left" size={24} color="black" />          
         </TouchableOpacity>
         <Text style={styles.title}>Settings</Text>
@@ -77,17 +72,15 @@ export default function Settings({ route, navigation }) {
         <StatusBar style='auto' />
         <View style={styles.background}></View>
         <Topbar />
-        <Text>{data}</Text>
         <ScrollView style={styles.card} contentContainerStyle={{justifyContent: 'center', alignItems: 'center'}}>
           <Button title="Save" onPress={() => storeData()} />
-          <Button title="Reset Data" onPress={() => {setData('0'); storeData();}} />
-
+          
           <Text>{dark ? 'on':'off'}</Text>
           <Switch value={getBoolVal()} onValueChange={() => {updateSettings(getOpposite(),2)}}  />
 
           <CalculationMethod />
 
-          <TouchableOpacity onPress={() => setOpen(!open)}><Text>Current City: {locationData}</Text></TouchableOpacity>
+          <TouchableOpacity onPress={() => setOpen(!open)}><Text>Current City: </Text></TouchableOpacity>
           { open ? cities.map((value, index) => <City country={value} key={index} />) : null}
         </ScrollView>
       </View>

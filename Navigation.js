@@ -48,10 +48,8 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 10,
         flexDirection: 'row',
-        // backgroundColor: '#2F4F4F',
         alignItems: 'center',
         justifyContent: 'space-evenly',
-        // borderRadius: 50,
         marginBottom: 10
     },
     item: {
@@ -66,7 +64,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#00FA9A',
         padding: 15,
         borderRadius: 50,
-        // height: 60
         height: 55
     },
     specialBackground: {

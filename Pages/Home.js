@@ -1,23 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, ImageBackground, Image } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useState, useContext } from 'react';
+import { StyleSheet, View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useState, useContext } from 'react';
 import SettingsContext from '../SettingsContext';
-import { Ionicons } from '@expo/vector-icons';
 import { useFonts } from 'expo-font';
 import Widget from '../components/Widget';
 import Cards from '../components/Cards';
+import { Feather } from '@expo/vector-icons';
 
 
 export default function HomeScreen({ navigation }) {
     let [fontsLoaded] = useFonts({'Raleway': require('../assets/fonts/Raleway-Regular.ttf')});
-    const [data, setData] = useState(null);
     const { settings, setSettings } = useContext(SettingsContext);
 
     const TopBar = () => {
       return(
         <View style={styles.topbar}>
-          <TouchableOpacity style={styles.btnPress} onPress={() => navigation.navigate('Settings', {value: data})}><Image source={require('../assets/icons/menu.png')} style={{width: '100%', height: '100%'}} /></TouchableOpacity>
+          <TouchableOpacity style={styles.btnPress} onPress={() => navigation.navigate('Settings')}><Feather name="bar-chart-2" size={24} color="#000" style={{transform: [{rotate: "90deg"}, {scaleX: -1}]}} /></TouchableOpacity>
         </View>
       );
     }
@@ -29,10 +27,9 @@ export default function HomeScreen({ navigation }) {
         <View style={[styles.container, {backgroundColor: settings[2] == "true" ? "#000" : "#fff"}]}>
           <StatusBar style='auto' />
             <View style={styles.background}></View>
-            {console.log(settings)}
             <TopBar />
-            {/* <Widget key={data} location={data} /> */}
-            {/* <Cards /> */}
+            <Widget />
+            <Cards />
         </View>
     )}
 }

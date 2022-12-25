@@ -26,8 +26,21 @@ export function SettingsProvider({children}) {
         setSettings(newSettings);
     }
 
+    const updateLocation = (country, city) => {
+        const newSettings = settings.map((val, id) => {
+            if (id === 0) {
+                return country;
+            } else if (id === 1) {
+                return city;
+            } else {
+                return val;
+            }
+        })
+        setSettings(newSettings);
+    }
+
     return(
-        <SettingsContext.Provider value={{settings, setSettings, updateSettings}}>
+        <SettingsContext.Provider value={{settings, updateLocation, updateSettings}}>
             {children}
         </SettingsContext.Provider>
     )
