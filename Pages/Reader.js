@@ -1,14 +1,15 @@
-import { StyleSheet, Text, View, ActivityIndicator, ScrollView, Image, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native';
 import { useFonts } from 'expo-font';
 import React, { useEffect, useState, useRef, memo } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Feather } from '@expo/vector-icons';
-import surahList from '../data/surahList.json';
+import surahNames from '../data/surahNames';
 
 export default function Reader() {
     let m = require('../data/index');
-    let [fontsLoaded] = useFonts({'QM': require('../assets/fonts/Nabi.ttf')});
+    let [fontsLoaded] = useFonts({'QM': require('../assets/fonts/Nabi.ttf'), 'Surah': require('../assets/fonts/karim.ttf')});
     const scrollViewRef = useRef();
+    const [arr, setArr] = useState([]);
     const [choice, setChoice] = useState(1);
     const [verses, setVerses] = useState('');
     const [freeze, setFreeze] = useState(true);
@@ -18,6 +19,7 @@ export default function Reader() {
     useEffect(() => {
         if (freeze){
             setVerses(Object.values(m.default[choice].verse))
+            CreateData()
             setFreeze(false)
             scrollViewRef.current?.scrollTo({x: 0, y: 0, animated: true})
         }
@@ -60,6 +62,7 @@ export default function Reader() {
             num = 114
             return;
         }
+        setArr([])
         setChoice(num);
         setFreeze(true);
     }
@@ -74,7 +77,7 @@ export default function Reader() {
                     <Feather name="moon" size={25} color={dark ? '#000' : '#fff'} onPress={() => setDark(!dark)} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.item}>
-                    <Feather name="menu" size={25} color='#fff' onPress={() => setModalVisible(!modalVisible)} />
+                    <Feather name="menu" size={25} color='#fff' onPress={() => {setModalVisible(!modalVisible); setArr([]); setFreeze(true)}} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.item} onPress={() => setChoices(choice + 1)}>
                     <Feather name="arrow-right" size={25} color='#fff' />
@@ -83,35 +86,79 @@ export default function Reader() {
         );
     }
 
-    const Select = ({id, value}) => {
+    const Surahs = () => {
         return(
-            <TouchableOpacity style={{width: '100%', flexDirection: 'row'}} onPress={() => {setChoices(id+1); setModalVisible(!modalVisible)}} >
-                <Text style={[styles.listtext, {flex: 2}]}>{value[0]}</Text><Text style={[styles.listtext, {flex: 3}]}>{value[1]}</Text>
+            <View style={{height: '100%'}}>
+                <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={true} contentContainerStyle={{flexGrow: 1, justifyContent: 'center'}}>
+                    { dark ? <Image source={require('../assets/bismillah-white.png')} style={styles.img} /> : <Image source={require('../assets/bismillah.png')} style={styles.img} />}
+                    <Text style={[styles.text, {color: dark ? '#fff' : '#000'} ]}>{returnSurah()}</Text>
+                </ScrollView>
+                <ToolBar />
+            </View>
+        );
+    }
+
+    const CreateData = () => {   
+        let whole = Object.values(m.default[choice].verse)
+        let ayat = '';
+        let page = m.default[choice].start;
+        let array = []
+        for(let i = 1; i <= m.default[choice].count; i++){
+            const arabic  = " (" + convertInt(String(i)) + ") "; 
+            ayat = ayat + whole[i] + arabic + "";  
+            if (m.default[choice].pages[page] == i) {         
+                // ayat += "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\r";
+                ayat += "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\r";
+                page = String(parseInt(page) + 1);
+                array.push({page: ayat, pgNumber: page})
+                ayat = ""
+            }
+        }
+        setArr(array)
+    }
+
+    const ReturnSurahs = ({value, id}) => {
+        return (
+            <View key={id}>
+                <Text style={styles.text}>{value.page}</Text>
+                <Text style={{textAlign: 'center', top: -20}}>{value.pgNumber}</Text>
+            </View>
+        );
+    }
+
+    const renderIte = ({ item, index }) => (
+        <ReturnSurahs value={item} id={index} />
+    );
+
+    const Surah = () => {
+        return(
+            <>
+                { choice != 9 ? <Image source={require('../assets/bismillah.png')} style={styles.img} /> : null}
+                <FlatList
+                    data={arr}
+                    renderItem={renderIte}
+                    keyExtractor={item => item.id}
+                />
+                <ToolBar />
+            </>
+        );
+    }
+
+    const Select = ({id, value, arabic, translation}) => {
+        return(
+            <TouchableOpacity style={styles.surahlist} onPress={() => {setChoices(Number(id)); setModalVisible(!modalVisible)}}>
+                <View style={{flexDirection: 'row'}}><Text style={styles.listtext}>{id}</Text>
+                <Text style={{textAlignVertical: 'center'}}>{value}{"\n"}
+                <Text style={{color: 'lightgrey', fontSize: 12}}>{translation}</Text></Text>
+                </View>
+                <Text style={{fontFamily: "Surah", fontSize: 60, color: '#4dc591'}}>{arabic}</Text>
             </TouchableOpacity>
         );
     }
 
-    const SurahSelect = () => {
-        return(
-            <Modal animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => setModalVisible(!modalVisible)}>
-                <View style={styles.surahlist}>
-                    <ScrollView contentContainerStyle={{justifyContent: 'center'}}>
-                        {Object.entries(surahList).map((value, index) => {
-                            return <Select key={index} id={index} value={value} />
-                        })}
-                    </ScrollView>
-                    <View style={{alignSelf: 'center'}}>
-                        <TouchableOpacity style={styles.item}>
-                            <Feather name="x-circle" size={25} color='#fff' onPress={() => setModalVisible(!modalVisible)} />
-                        </TouchableOpacity>
-                    </View>
-                </View>
-            </Modal>
-        );
-    }
+    const renderItem = ({ item }) => (
+        <Select id={item.id} value={item.name} arabic={item.arabic} translation={item.translation} />
+    );
 
     if (!fontsLoaded || choice == null) {
         return (
@@ -121,14 +168,17 @@ export default function Reader() {
         );
       } else {
         return(
-            <View style={[styles.container, {backgroundColor: dark ? '#000' : 'rgba(0, 250, 154, 0.1)'} ]}>
+            <View style={[styles.container, {backgroundColor: '#fff'} ]}>
                 <StatusBar style='transparent' />
-                <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={true} contentContainerStyle={{flexGrow: 1, justifyContent: 'center'}}>
-                    { dark ? <Image source={require('../assets/bismillah-white.png')} style={styles.img} /> : <Image source={require('../assets/bismillah.png')} style={styles.img} />}
-                    <Text style={[styles.text, {color: dark ? '#fff' : '#000'} ]}>{returnSurah()}</Text>
-                </ScrollView>
-                <SurahSelect />
-                <ToolBar />
+                { modalVisible ?
+                <Surah />
+                : 
+                <FlatList
+                    data={surahNames}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id}
+                    style={{width: '100%'}}
+                />}
             </View>
     )}
 }
@@ -138,18 +188,15 @@ const styles = StyleSheet.create({
         flex: 1, 
         alignItems: 'center', 
         justifyContent: 'center',
-        // backgroundColor: 'rgba(228, 247, 143, 0.3)'
-        backgroundColor: 'rgba(0, 250, 154, 0.1)',
-        // backgroundColor: '#15202B',
-        paddingTop: '10%',
-
+        paddingTop: '15%',
+        paddingBottom: '10%',
     },
     title: {
         fontFamily: 'Raleway',
         fontSize: 20,
     },
     img: {
-        width: '80%',
+        width: 200,
         height: 90,
         alignSelf: 'center',
     },
@@ -161,7 +208,7 @@ const styles = StyleSheet.create({
     },
     tool: {
         alignSelf: 'center',
-        bottom: 10,
+        // bottom: ,
         flexDirection: 'row',
         backgroundColor: '#2F4F4F',
         alignItems: 'center',
@@ -180,22 +227,26 @@ const styles = StyleSheet.create({
         borderColor: '#00FA9A'
     },
     surahlist: {
-        fontFamily: 'Raleway',
-        height: '50%', 
-        width: '60%', 
-        backgroundColor: '#2F4F4F', 
-        alignSelf: 'center', 
-        bottom: 10, 
-        position: 'absolute', 
-        padding: 5,
-        borderRadius: 12,
+        alignSelf: 'center',
+        width: '95%', 
+        flexDirection: 'row', 
+        borderWidth: 1, 
+        borderColor: '#e3f6fd',
+        borderRadius: 30,
+        margin: 5,
+        justifyContent: 'space-between',
+        paddingHorizontal: 15
     },
     listtext: {
-        flex: 1,
+        color: '#fff', 
+        borderRadius: 20, 
+        width: 40, 
+        height: 40, 
+        backgroundColor: '#4dc591', 
+        alignSelf: 'center',
+        textAlignVertical: 'center',
+        marginRight: 10,
         textAlign: 'center',
-        color: '#fff',
-        padding: 5,
-        justifyContent: 'space-evenly',
     }
 });
 
