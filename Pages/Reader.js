@@ -4,41 +4,24 @@ import React, { useEffect, useState, useRef, memo } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Feather } from '@expo/vector-icons';
 import surahNames from '../data/surahNames';
+import { colorScheme } from '../components/Color';
 
 export default function Reader() {
     let m = require('../data/index');
     let [fontsLoaded] = useFonts({'QM': require('../assets/fonts/Nabi.ttf'), 'Surah': require('../assets/fonts/karim.ttf')});
-    const scrollViewRef = useRef();
+    let theme = colorScheme();
     const [arr, setArr] = useState([]);
     const [choice, setChoice] = useState(1);
-    const [verses, setVerses] = useState('');
     const [freeze, setFreeze] = useState(true);
     const [dark, setDark] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
         if (freeze){
-            setVerses(Object.values(m.default[choice].verse))
             CreateData()
             setFreeze(false)
-            scrollViewRef.current?.scrollTo({x: 0, y: 0, animated: true})
         }
     }, [freeze])
-
-    const returnSurah = () => {
-        let ayat = '';
-        let page = m.default[choice].start;
-        for(let i = 1; i <= m.default[choice].count; i++){
-            const arabic  = " (" + convertInt(String(i)) + ") "; 
-            ayat = ayat + verses[i] + arabic + "";  
-            if (m.default[choice].pages[page] == i) {
-                ayat += "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\r";
-                ayat += "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀" + page + "\n\n";
-                page = String(parseInt(page) + 1)
-            }
-        }
-        return ayat;
-    }
 
     const convertInt = (num) => {
         num = num.replace(/1/g, "١");
@@ -86,18 +69,6 @@ export default function Reader() {
         );
     }
 
-    const Surahs = () => {
-        return(
-            <View style={{height: '100%'}}>
-                <ScrollView ref={scrollViewRef} showsVerticalScrollIndicator={true} contentContainerStyle={{flexGrow: 1, justifyContent: 'center'}}>
-                    { dark ? <Image source={require('../assets/bismillah-white.png')} style={styles.img} /> : <Image source={require('../assets/bismillah.png')} style={styles.img} />}
-                    <Text style={[styles.text, {color: dark ? '#fff' : '#000'} ]}>{returnSurah()}</Text>
-                </ScrollView>
-                <ToolBar />
-            </View>
-        );
-    }
-
     const CreateData = () => {   
         let whole = Object.values(m.default[choice].verse)
         let ayat = '';
@@ -105,12 +76,12 @@ export default function Reader() {
         let array = []
         for(let i = 1; i <= m.default[choice].count; i++){
             const arabic  = " (" + convertInt(String(i)) + ") "; 
-            ayat = ayat + whole[i] + arabic + "";  
+            ayat = ayat + whole[i] + arabic;  
             if (m.default[choice].pages[page] == i) {         
                 // ayat += "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\r";
                 ayat += "⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\r";
                 page = String(parseInt(page) + 1);
-                array.push({page: ayat, pgNumber: page})
+                array.push({page: ayat, pgNumber: page-1})
                 ayat = ""
             }
         }
@@ -120,8 +91,8 @@ export default function Reader() {
     const ReturnSurahs = ({value, id}) => {
         return (
             <View key={id}>
-                <Text style={styles.text}>{value.page}</Text>
-                <Text style={{textAlign: 'center', top: -20}}>{value.pgNumber}</Text>
+                <Text style={[styles.text, { color: theme.secondary }]}>{value.page}</Text>
+                <Text style={{textAlign: 'center', top: -20, padding: 0, margin: 0, color: theme.secondary}}>{value.pgNumber}</Text>
             </View>
         );
     }
@@ -148,7 +119,7 @@ export default function Reader() {
         return(
             <TouchableOpacity style={styles.surahlist} onPress={() => {setChoices(Number(id)); setModalVisible(!modalVisible)}}>
                 <View style={{flexDirection: 'row'}}><Text style={styles.listtext}>{id}</Text>
-                <Text style={{textAlignVertical: 'center'}}>{value}{"\n"}
+                <Text style={{textAlignVertical: 'center', color: theme.secondary}}>{value}{"\n"}
                 <Text style={{color: 'lightgrey', fontSize: 12}}>{translation}</Text></Text>
                 </View>
                 <Text style={{fontFamily: "Surah", fontSize: 60, color: '#4dc591'}}>{arabic}</Text>
@@ -168,7 +139,7 @@ export default function Reader() {
         );
       } else {
         return(
-            <View style={[styles.container, {backgroundColor: '#fff'} ]}>
+            <View style={[styles.container, {backgroundColor: theme.primary} ]}>
                 <StatusBar style='transparent' />
                 { modalVisible ?
                 <Surah />
@@ -188,7 +159,7 @@ const styles = StyleSheet.create({
         flex: 1, 
         alignItems: 'center', 
         justifyContent: 'center',
-        paddingTop: '15%',
+        paddingTop: '5%',
         paddingBottom: '10%',
     },
     title: {
@@ -204,11 +175,10 @@ const styles = StyleSheet.create({
         fontFamily: 'QM',
         fontSize: 20,
         textAlign: 'justify',
-        padding: 10,
+        paddingHorizontal: 10,
     },
     tool: {
         alignSelf: 'center',
-        // bottom: ,
         flexDirection: 'row',
         backgroundColor: '#2F4F4F',
         alignItems: 'center',

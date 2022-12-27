@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View, ActivityIndicator, ScrollView, Image, TouchableOpacity, Modal } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, ScrollView, Image, TouchableOpacity, Modal, FlatList } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
-import surahList from '../data/surahList.json';
+import surahNames from '../data/surahNames';
 import audioa from '../data/sheikhmaher';
 import audioy from '../data/sheikhyasser';
 import { Audio } from 'expo-av';
@@ -76,19 +76,35 @@ export default function Player() {
 
     const Select = ({id, value}) => {
         return(
-            <TouchableOpacity style={{width: '100%', flexDirection: 'row'}} onPress={() => {setIndex(id+1);setModalVisible(!modalVisible)}} >
-                <Text style={[styles.listtext, {flex: 2}]}>{value[0]}</Text><Text style={[styles.listtext, {flex: 3}]}>{value[1]}</Text>
+            <TouchableOpacity style={{width: '100%', flexDirection: 'row'}} onPress={() => {setIndex(Number(id));setModalVisible(!modalVisible)}} >
+                <Text style={[styles.listtext, {flex: 2}]}>{id}</Text><Text style={[styles.listtext, {flex: 3}]}>{value}</Text>
             </TouchableOpacity>
+        );
+    }
+
+    const renderItem = ({ item }) => (
+        <Select id={item.id} value={item.name} />
+    );
+
+    const Reciter = () => {
+        return(
+            <View>
+                
+            </View>
         );
     }
 
     const SurahSelect = () => {
         return(
-            <ScrollView style={styles.surahlist} contentContainerStyle={{justifyContent: 'center'}}>
-                {Object.entries(surahList).map((value, index) => {
-                    return <Select key={index} id={index} value={value} />
-                })}
-            </ScrollView>
+            <>
+                <FlatList
+                    data={surahNames}
+                    renderItem={renderItem}
+                    keyExtractor={item => item.id}
+                    contentContainerStyle={{}}
+                    style={{width: '100%'}}
+                />
+            </>
         );
     }
 
@@ -135,7 +151,6 @@ export default function Player() {
                         minimumTrackTintColor="grey"
                         maximumTrackTintColor="silver"
                     />
-                    {console.log(surahList[index])}
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '80%'}}>
                         <Text style={{color: 'silver'}}>{convertToMinutes(position)}</Text>
                         <Text style={{color: 'silver'}}>{convertToMinutes(duration)}</Text>
@@ -163,7 +178,6 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         justifyContent: 'center',
         paddingTop: '10%',
-        backgroundColor: '#000', 
     },
     title: {
         fontFamily: 'Raleway',
@@ -188,7 +202,6 @@ const styles = StyleSheet.create({
     listtext: {
         flex: 1,
         textAlign: 'center',
-        color: '#fff',
         padding: 5,
         justifyContent: 'space-evenly',
     }
