@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, FlatList, TouchableWithoutFeedback } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
@@ -142,10 +142,11 @@ export default function Player() {
                         <MaterialCommunityIcons name="close" size={30} color={theme.secondary} />
                     </TouchableOpacity>
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                    {/* <Image source={require("../assets/bismillah.png")} style={styles.img} /> */}
-                    <Line />
+                    <TouchableOpacity style={{backgroundColor: theme.primary, elevation: 5, borderRadius: 150, shadowColor: theme.secondary, width: 300, height: 300, margin: 20}}>
+                        <Image source={require("../assets/Sheikh.jpg")} style={styles.img} />
+                    </TouchableOpacity>
                     <Text style={{fontFamily: 'Raleway', color: theme.secondary}}>Surah {surahNames[index-1].name}</Text>
-                    <Text style={{fontFamily: 'Raleway', color: theme.secondary}}>Sheikh Yasser Al Dosari</Text>
+                    <Text style={{fontFamily: 'Raleway', color: theme.secondary, marginBottom: 10}}>Sheikh Yasser Al Dosari</Text>
                     <Slider 
                         style={{width: '90%', marginTop: 30}}
                         value={position}
@@ -190,9 +191,9 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     img: {
-        width: '70%',
-        height: '50%',
-        margin: 20,
+        width: '100%',
+        height: '100%',
+        borderRadius: 250,
     },
     surahlist: {
         fontFamily: 'Raleway',
