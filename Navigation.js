@@ -1,5 +1,5 @@
-import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
-import { Ionicons, Feather, Octicons } from '@expo/vector-icons';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Octicons } from '@expo/vector-icons';
 import { useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { colorScheme } from './components/Color';
@@ -7,12 +7,12 @@ import { colorScheme } from './components/Color';
 export default function Navigation() {
     const [select, setSelect] = useState(0);
     const [hide, setHide] = useState(true);
-    const open = { width: '95%' }
-    const closed = { alignSelf: 'flex-end', right: 10 }
+    const open = { width: '100%' }
+    const closed = { alignSelf: 'flex-end', right: 10, position: 'absolute' }
     let theme = colorScheme();
 
     return (
-      <View style={[styles.container, hide ? open : closed ]}> 
+      <View style={[styles.container, hide ? open : closed, { backgroundColor: theme.primary } ]}> 
         { hide ?
         <>
           <Item route="Reader" itemStyle={styles.item}  name="book" color={theme.secondary} index={1} num={select} setNum={setSelect} />
@@ -26,17 +26,15 @@ export default function Navigation() {
     );
 }
 
-function CloseItem({ itemStyle, itemBg, name, alt, color, hide, setHide }) {
+function CloseItem({ itemStyle, name, alt, color, hide, setHide }) {
   return(
-    <View style={itemBg}>
-      <TouchableOpacity style={itemStyle} onPress={() => setHide(!hide)}>
+      <TouchableOpacity style={[itemStyle, {backgroundColor: hide ? 'transparent' : '#e3f6fd', opacity: 0.7}]} onPress={() => setHide(!hide)}>
         <Octicons name={hide ? name : alt} size={20} color={color} />  
       </TouchableOpacity>
-    </View>
   );
 }
 
-function Item({ route, itemStyle, itemBg, name, color, index, num, setNum }) {
+function Item({ route, itemStyle, name, color, index, num, setNum }) {
   const navigation = useNavigation();
   return(
     <TouchableOpacity style={[itemStyle, {backgroundColor: index == num ? '#e3f6fd' : 'transparent', opacity: 0.7}]} onPress={() => {setNum(index); navigation.navigate(route);}}>
@@ -48,12 +46,11 @@ function Item({ route, itemStyle, itemBg, name, color, index, num, setNum }) {
 const styles = StyleSheet.create({
     container: {
         alignSelf: 'center',
-        position: 'absolute',
-        bottom: 10,
+        bottom: 0,
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-evenly',
-        marginBottom: 10
+        paddingBottom: 10,
     },
     item: {
         padding: 11,
@@ -68,11 +65,5 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 50,
         height: 55
-    },
-    specialBackground: {
-        backgroundColor: 'white',
-        // top: -15,
-        padding: 4,
-        borderRadius: 50,
     }
 });

@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View, ScrollView, Image, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native';
 import { useFonts } from 'expo-font';
-import React, { useEffect, useState, useRef, memo } from 'react';
+import React, { useEffect, useState, memo } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Feather } from '@expo/vector-icons';
 import surahNames from '../data/surahNames';
@@ -13,7 +13,6 @@ export default function Reader() {
     const [arr, setArr] = useState([]);
     const [choice, setChoice] = useState(1);
     const [freeze, setFreeze] = useState(true);
-    const [dark, setDark] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
@@ -52,18 +51,15 @@ export default function Reader() {
 
     const ToolBar = () => {
         return(
-            <View style={styles.tool}>
+            <View style={[styles.tool, { backgroundColor: theme.primary }]}>
                 <TouchableOpacity style={styles.item} onPress={() => setChoices(choice - 1)}>
-                    <Feather name="arrow-left" size={25} color='#fff' />
+                    <Feather name="arrow-left" size={25} color={theme.secondary} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.item}>
-                    <Feather name="moon" size={25} color={dark ? '#000' : '#fff'} onPress={() => setDark(!dark)} />
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.item}>
-                    <Feather name="menu" size={25} color='#fff' onPress={() => {setModalVisible(!modalVisible); setArr([]); setFreeze(true)}} />
+                    <Feather name="menu" size={25} color={theme.secondary} onPress={() => {setModalVisible(!modalVisible); setArr([]); setFreeze(true)}} />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.item} onPress={() => setChoices(choice + 1)}>
-                    <Feather name="arrow-right" size={25} color='#fff' />
+                    <Feather name="arrow-right" size={25} color={theme.secondary} />
                 </TouchableOpacity>
             </View>
         );
@@ -101,10 +97,20 @@ export default function Reader() {
         <ReturnSurahs value={item} id={index} />
     );
 
+    const Bismillah = () => {
+        if (choice == 9) {
+            return null
+        } else if (theme.primary == "#fff") {
+            return <Image source={require('../assets/bismillah.png')} style={styles.img} /> 
+        } else {
+            return <Image source={require('../assets/bismillah-white.png')} style={styles.img} /> 
+        }
+    }
+
     const Surah = () => {
         return(
             <>
-                { choice != 9 ? <Image source={require('../assets/bismillah.png')} style={styles.img} /> : null}
+                <Bismillah />
                 <FlatList
                     data={arr}
                     renderItem={renderIte}
@@ -144,12 +150,14 @@ export default function Reader() {
                 { modalVisible ?
                 <Surah />
                 : 
+                <>
+                <Text style={styles.title}>Surah</Text>
                 <FlatList
                     data={surahNames}
                     renderItem={renderItem}
                     keyExtractor={item => item.id}
                     style={{width: '100%'}}
-                />}
+                /></>}
             </View>
     )}
 }
@@ -160,7 +168,6 @@ const styles = StyleSheet.create({
         alignItems: 'center', 
         justifyContent: 'center',
         paddingTop: '5%',
-        paddingBottom: '10%',
     },
     title: {
         fontFamily: 'Raleway',
@@ -180,10 +187,10 @@ const styles = StyleSheet.create({
     tool: {
         alignSelf: 'center',
         flexDirection: 'row',
-        backgroundColor: '#2F4F4F',
         alignItems: 'center',
         justifyContent: 'space-evenly',
         borderRadius: 50,
+        padding: 5,
     },
     item: {
         padding: 10,

@@ -1,14 +1,16 @@
-import { StyleSheet, Text, View, ActivityIndicator, ScrollView, Image, TouchableOpacity, Modal, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, FlatList } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
+import { colorScheme } from '../components/Color';
 import surahNames from '../data/surahNames';
 import audioa from '../data/sheikhmaher';
 import audioy from '../data/sheikhyasser';
 import { Audio } from 'expo-av';
-
+import Line from '../components/Lines';
 export default function Player() {
+    let theme = colorScheme();
     const [audio, setAudio] = useState(new Audio.Sound());
     const [close, setClose] = useState(false);
     const [index, setIndex] = useState(1);
@@ -74,25 +76,23 @@ export default function Player() {
         else { setIndex(number) }
     }
 
-    const Select = ({id, value}) => {
+    const Select = ({id, value, translation}) => {
         return(
-            <TouchableOpacity style={{width: '100%', flexDirection: 'row'}} onPress={() => {setIndex(Number(id));setModalVisible(!modalVisible)}} >
-                <Text style={[styles.listtext, {flex: 2}]}>{id}</Text><Text style={[styles.listtext, {flex: 3}]}>{value}</Text>
+            <TouchableOpacity style={{width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, padding: 5, borderColor: '#e3f6fd'}} onPress={() => {setIndex(Number(id));setModalVisible(!modalVisible)}} >
+                <View style={{flexDirection: 'row'}}>
+                <Text style={{marginHorizontal: 20, textAlignVertical: 'center', color: '#4dc591'}}>{id}</Text>
+                <View style={{flexDirection: 'row'}}>
+                    <Text style={{textAlignVertical: 'center', color: theme.secondary}}>{value}{"\n"}
+                    <Text style={{color: 'lightgrey', fontSize: 12}}>{translation}</Text></Text>
+                </View></View>
+                <MaterialCommunityIcons name='play-speed' size={20} color={theme.secondary} style={{alignSelf: 'center', marginHorizontal: 10}} />
             </TouchableOpacity>
         );
     }
 
     const renderItem = ({ item }) => (
-        <Select id={item.id} value={item.name} />
+        <Select id={item.id} value={item.name} translation={item.translation} />
     );
-
-    const Reciter = () => {
-        return(
-            <View>
-                
-            </View>
-        );
-    }
 
     const SurahSelect = () => {
         return(
@@ -126,45 +126,51 @@ export default function Player() {
       }
 
     return(
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: theme.primary}]}>
             <StatusBar style='transparent' />
-            <TouchableOpacity onPress={() => setChoice(0)}><Text>Sheikh Yasser Al Dosari</Text></TouchableOpacity>
-            <TouchableOpacity onPress={() => setChoice(1)}><Text>Sheikh Maher Al Muaqily</Text></TouchableOpacity>
+            {/* <TouchableOpacity onPress={() => setChoice(0)}><Text>Sheikh Yasser Al Dosari</Text></TouchableOpacity>
+            <TouchableOpacity onPress={() => setChoice(1)}><Text>Sheikh Maher Al Muaqily</Text></TouchableOpacity> */}
+            {/* <Reciter /> */}
             <SurahSelect />
             {/* <Player /> */}
             <Modal animationType="slide"
                     transparent={false}
                     visible={modalVisible}
                     onRequestClose={() => setModalVisible(!modalVisible)}>
-                <View style={styles.container}>
-                    <TouchableOpacity>
-                        <MaterialCommunityIcons name="close" size={40} color='silver' onPress={() => {setModalVisible(!modalVisible); setLoaded(false); audio.unloadAsync()}} />
+                <View style={{flex: 1, backgroundColor: theme.primary}}>
+                    <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary, borderColor: theme.primary, shadowColor: theme.secondary, alignSelf: 'flex-end', margin: 20}]} onPress={() => {setModalVisible(!modalVisible); setLoaded(false); audio.unloadAsync()}}>
+                        <MaterialCommunityIcons name="close" size={30} color={theme.secondary} />
                     </TouchableOpacity>
-                    <Image source={require("../assets/op.jpg")} style={styles.img} />
+                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    {/* <Image source={require("../assets/bismillah.png")} style={styles.img} /> */}
+                    <Line />
+                    <Text style={{fontFamily: 'Raleway', color: theme.secondary}}>Surah {surahNames[index-1].name}</Text>
+                    <Text style={{fontFamily: 'Raleway', color: theme.secondary}}>Sheikh Yasser Al Dosari</Text>
                     <Slider 
-                        style={{width: '90%', marginTop: 40}}
+                        style={{width: '90%', marginTop: 30}}
                         value={position}
                         onSlidingComplete={(value) => audio.setPositionAsync(value)}
                         minimumValue={0}
                         maximumValue={duration}
-                        thumbTintColor="silver"
+                        thumbTintColor={theme.secondary}
                         minimumTrackTintColor="grey"
                         maximumTrackTintColor="silver"
                     />
                     <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '80%'}}>
-                        <Text style={{color: 'silver'}}>{convertToMinutes(position)}</Text>
-                        <Text style={{color: 'silver'}}>{convertToMinutes(duration)}</Text>
+                        <Text style={{color: theme.secondary}}>{convertToMinutes(position)}</Text>
+                        <Text style={{color: theme.secondary}}>{convertToMinutes(duration)}</Text>
                     </View>
-                    <View style={{flexDirection: 'row'}}>
-                        <TouchableOpacity onPress={() => {skipTrack(); setNextIndex(index+1)}}>
-                            <MaterialCommunityIcons name="skip-backward" size={40} color='silver' />
+                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '50%'}}>
+                        <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary, borderColor: theme.primary, shadowColor: theme.secondary }]} onPress={() => {skipTrack(); setNextIndex(index+1)}}>
+                            <Ionicons name="play-skip-back" size={30} color={theme.secondary} />
                         </TouchableOpacity>
-                        <TouchableOpacity>
-                            { playing ? <MaterialCommunityIcons name="pause" size={40} color='silver' onPress={pauseSound} /> : <MaterialCommunityIcons name="play" size={40} color='silver' onPress={playSound} /> }
+                        <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary, borderColor: theme.primary, shadowColor: theme.secondary }]}>
+                            { playing ? <Ionicons name="pause" size={30} color={theme.secondary} onPress={pauseSound} /> : <Ionicons name="play" size={30} color={theme.secondary} onPress={playSound} /> }
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {skipTrack(); setNextIndex(index+1)}}>
-                            <MaterialCommunityIcons name="skip-forward" size={40} color='silver' />
+                        <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary, borderColor: theme.primary, shadowColor: theme.secondary }]} onPress={() => {skipTrack(); setNextIndex(index+1)}}>
+                            <Ionicons name="play-skip-forward" size={30} color={theme.secondary} />
                         </TouchableOpacity>
+                    </View>
                     </View>
                 </View>
             </Modal>
@@ -184,15 +190,9 @@ const styles = StyleSheet.create({
         fontSize: 20,
     },
     img: {
-        width: 300,
-        height: 300,
-        elevation: 20,
-        shadowColor: 'black',
-        shadowOpacity: 1,
-        shadowOffset: {width: 2, height: 2},
-        shadowRadius: 10,
-        // borderRadius: 150,
-        // alignSelf: 'center',
+        width: '70%',
+        height: '50%',
+        margin: 20,
     },
     surahlist: {
         fontFamily: 'Raleway',
@@ -204,5 +204,11 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         padding: 5,
         justifyContent: 'space-evenly',
+    },
+    button: {
+        borderRadius: 40, 
+        elevation: 5, 
+        borderWidth: 1, 
+        padding: 10, 
     }
 });
