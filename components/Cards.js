@@ -1,4 +1,5 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import husna from '../data/names';
 import { useFonts } from 'expo-font';
 import list from '../data/day.json';
@@ -30,12 +31,23 @@ export default function Cards() {
         );
     }
 
+    const DuaLink = () => {
+        return(
+            <TouchableOpacity style={[styles.card, {backgroundColor: '#fff', width: '20%'}]}>
+                <MaterialCommunityIcons name="hands-pray" size={24} color="#4dc591" />
+            </TouchableOpacity>
+        )
+    }
+
     if (!fontsLoaded) {
         return(<></>);
     } else {
     return(
         <View>
-            <Name />
+            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <Name />
+                <DuaLink />
+            </View>
             <Dua />
         </View>
     )}

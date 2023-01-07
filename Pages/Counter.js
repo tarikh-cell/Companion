@@ -1,10 +1,14 @@
-import { StyleSheet, Text, View, ActivityIndicator, ScrollView, ImageBackground, TouchableOpacity, Modal, FlatList } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, ImageBackground, TouchableOpacity, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import { colorScheme } from '../components/Color';
 import { StatusBar } from 'expo-status-bar';
 import day from '../data/day.json';
+import night from '../data/night.json';
 
 export default function Counter() {
+    let theme = colorScheme();
     const [open, setOpen] = useState(false);
+    const [data, setData] = useState();
 
     const renderItem = ({ item }) => (
         <Card value={item} />
@@ -12,36 +16,42 @@ export default function Counter() {
 
     const Card = ({value}) => {
         return(
-            <View style={[styles.item, {backgroundColor: '#fff'} ]}>
-                <Text style={[styles.itemtext, {} ]}>Morning Athkar</Text>
-                <Text style={styles.itemtext}>{value.zekr}</Text>
-                <Text style={[styles.itemtext, styles.count]}>Repeat {value.count}</Text>
+            <View style={[styles.item, {backgroundColor: theme.primary, shadowColor: theme.secondary} ]}>
+                <Text style={[styles.itemtext, {color: theme.secondary} ]}>{value.category}</Text>
+                <Text style={[styles.itemtext, {color: theme.secondary} ]}>{value.zekr}</Text>
+                <Text style={[styles.itemtext, {color: theme.secondary} ]}>Repeat {value.count}</Text>
             </View>
         );
     } 
 
     return(
-        <View style={styles.container}>
+        <View style={[styles.container, {backgroundColor: theme.primary}]}>
             <StatusBar style='transparent' />
             { open ? 
-                <FlatList
-                    data={day}
-                    renderItem={renderItem}
-                    keyExtractor={item => item.id}
-                    style={{width: '100%'}}
-                />
+                <>
+                    <TouchableOpacity style={{alignSelf: 'flex-start', paddingLeft: 20}} onPress={() => setOpen(!open)}>
+                        <Text>Back</Text>
+                    </TouchableOpacity>
+                    <FlatList
+                        data={data}
+                        renderItem={renderItem}
+                        keyExtractor={item => item.id}
+                        style={{width: '100%'}}
+                    />
+                </>
             :
-            <TouchableOpacity style={styles.card} onPress={() => setOpen(!open)}>
-                <ImageBackground source={require('../assets/sunrise.png')} style={styles.img}>
-                    <Text style={styles.title}>Morning Rememberance</Text>
-                </ImageBackground> 
-            </TouchableOpacity>}
-
-            {/* <TouchableOpacity style={styles.card}>
-                <ImageBackground source={require('../assets/evening.jpg')} style={styles.img}>
-                    <Text style={styles.title}>Evening Rememberance</Text>    
-                </ImageBackground>
-            </TouchableOpacity> */}
+            <>
+                <TouchableOpacity style={styles.card} onPress={() => {setOpen(!open); setData(day)}}>
+                    <ImageBackground source={require('../assets/sunrise.png')} style={styles.img}>
+                        <Text style={styles.title}>Morning Rememberance</Text>
+                    </ImageBackground> 
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.card} onPress={() => {setOpen(!open); setData(night)}}>
+                    <ImageBackground source={require('../assets/evening.jpg')} style={styles.img}>
+                        <Text style={styles.title}>Evening Rememberance</Text>    
+                    </ImageBackground>
+                </TouchableOpacity>
+            </>}
         </View>
     )
 }
@@ -51,7 +61,6 @@ const styles = StyleSheet.create({
         flex: 1, 
         alignItems: 'center', 
         paddingTop: '10%',
-        backgroundColor: '#fff'
     },
     card: {     
         width: '90%',
