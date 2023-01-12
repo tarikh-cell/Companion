@@ -83,7 +83,7 @@ const husna = [
     {name:'العَفُوُ ', transliteration: 'AL-AFUWW ', translation: 'The Pardoner'},
     {name:'الرَّؤُوفُ ', transliteration: 'AR-RAOOF ', translation: 'The Most Kind'},
     {name:'َمَالِكُ ٱلْمُلْكُ ', transliteration: 'MAALIK-UL-MULK ', translation: 'Master of the Kingdom, Owner of the Dominion'},
-    {name:'ذُوالْجَلاَلِ وَالإكْرَامِ ', transliteration: 'DHUL-JALAALI WAL-IKRAAM Possessor of Glory and Honour, Lord of Majesty and Generosity'},
+    {name:'ذُوالْجَلاَلِ وَالإكْرَامِ ', transliteration: 'DHUL-JALAALI WAL-IKRAAM ', translation: 'Possessor of Glory and Honour, Lord of Majesty and Generosity'},
     {name:'الْمُقْسِطُ', transliteration: 'AL-MUQSIT', translation: 'The Just One'},
     {name:'الْجَامِعُ', transliteration: 'AL-JAAMI ', translation: 'The Gatherer, the Uniter'},
     {name:'ٱلْغَنيُّ', transliteration: 'AL-GHANIYY ', translation: 'The Self-Sufficient, The Wealthy'},

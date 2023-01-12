@@ -4,6 +4,7 @@ import SettingsContext from '../SettingsContext';
 import { Ionicons } from '@expo/vector-icons';
 
 export default function Widget() {
+    const [date, setDate] = useState('');
     const [times, setTimes] = useState(''); 
     const [loading, setLoading] = useState(true); 
     const [refreshing, setRefreshing] = useState(false);
@@ -32,6 +33,7 @@ export default function Widget() {
           .then(response => response.json())
           .then(json => {
             setTimes(json.data.timings);
+            setDate(json.data.date.hijri.day + " " + json.data.date.hijri.month.en + " " + json.data.date.hijri.year)
             setLoading(false);   
         })
           .catch(error => {
@@ -188,10 +190,10 @@ export default function Widget() {
                         <View>
                             <Text style={[styles.text, {fontSize: 17}]}>Now:</Text>
                             <Text style={[styles.text, {fontSize: 20, color: '#4dc591'}]}>{getCurrentPrayer()}</Text>
-                            <Text style={[styles.text, {fontSize: 15, color: '#e8def5'}]}>at {getNextPrayerTime()}</Text>
+                            <Text style={[styles.text, {fontSize: 15, color: '#e8def5'}]}></Text>
                         </View>
                     </View>
-                    <Text style={[styles.text,{fontSize: 20}]}>Wednesday, 16th April 2</Text>
+                    <Text style={[styles.text,{fontSize: 20}]}>{date}</Text>
                     <Text style={[styles.text, {fontSize: 12, marginTop: 5, color: '#308695'}]}><Ionicons name="location" size={12} color="#308695" />{settings[0]}, {settings[1]}</Text> 
                 </View>
             </ScrollView>

@@ -8,7 +8,6 @@ import surahNames from '../data/surahNames';
 import audioa from '../data/sheikhmaher';
 import audioy from '../data/sheikhyasser';
 import { Audio } from 'expo-av';
-import Line from '../components/Lines';
 export default function Player() {
     let theme = colorScheme();
     const [audio, setAudio] = useState(new Audio.Sound());

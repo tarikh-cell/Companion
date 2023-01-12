@@ -2,13 +2,15 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SettingsProvider } from './SettingsContext';
 
-import HomeScreen from './Pages/Home';
-import Settings from './Pages/Settings';
-import Location from './Pages/Location';
+import HomeScreen from './pages/Home';
+import Settings from './pages/Settings';
+import Location from './pages/Location';
 import Navigation from './Navigation';
-import Reader from './Pages/Reader';
-import Player from './Pages/Player';
-import Counter from './Pages/Counter';
+import Reader from './pages/Reader';
+import Player from './pages/Player';
+import Daily from './pages/Daily';
+import Counter from './pages/Counter';
+import Names from './pages/Names';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -21,7 +23,9 @@ export default function App() {
           <Stack.Screen name="Reader" component={Reader} />
           <Stack.Screen name="Location" component={Location} />
           <Stack.Screen name="Player" component={Player} />
+          <Stack.Screen name="Daily" component={Daily} />
           <Stack.Screen name="Counter" component={Counter} />
+          <Stack.Screen name="Names" component={Names} />
         </Stack.Navigator>
         <Navigation />
       </NavigationContainer>

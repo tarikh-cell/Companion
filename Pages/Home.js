@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
 import { useState, useContext } from 'react';
 import SettingsContext from '../SettingsContext';
 import { useFonts } from 'expo-font';
@@ -29,8 +29,10 @@ export default function HomeScreen({ navigation }) {
           <StatusBar style='auto' />
             <View style={styles.background}></View>
             <TopBar />
-            <Widget />
-            <Cards />
+            <ScrollView showsVerticalScrollIndicator={false} style={{flex: 1, paddingBottom: 10}} contentContainerStyle={{alignItems: 'center'}}>
+              <Widget />
+              <Cards />
+            </ScrollView>
         </View>
     )}
 }
@@ -39,7 +41,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        alignItems: 'center',
     },
     topbar: {
         paddingTop: '10%',
