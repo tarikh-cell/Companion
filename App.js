@@ -11,6 +11,7 @@ import Player from './pages/Player';
 import Daily from './pages/Daily';
 import Counter from './pages/Counter';
 import Names from './pages/Names';
+import Calendar from './pages/Calendar';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
           <Stack.Screen name="Daily" component={Daily} />
           <Stack.Screen name="Counter" component={Counter} />
           <Stack.Screen name="Names" component={Names} />
+          <Stack.Screen name="Calendar" component={Calendar} />
         </Stack.Navigator>
         <Navigation />
       </NavigationContainer>

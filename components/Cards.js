@@ -64,12 +64,22 @@ export default function Cards() {
     const NamesLink = () => {
         return(
             <>
-                <TouchableOpacity style={[styles.card, {backgroundColor: '#fff', width: '17%'}]} onPress={() => navigation.navigate("Names")}>
-                    <Text style={{color: "#4dc591"}}>99</Text>
+                <TouchableOpacity style={[styles.card, {backgroundColor: '#fff', width: '17%', padding: 17}]} onPress={() => navigation.navigate("Names")}>
+                    <Text style={{color: "#4dc591", fontSize: 24}}>99</Text>
                 </TouchableOpacity>
             </>
         )
     }
+
+    const CalendarLink = () => {
+        return(
+            <>
+                <TouchableOpacity style={[styles.card, {backgroundColor: '#fff', width: '17%'}]} onPress={() => navigation.navigate("Calendar")}>
+                    <MaterialCommunityIcons name="calendar" size={24} color="black" />
+                </TouchableOpacity>
+            </>
+        )
+    }    
 
     if (!fontsLoaded) {
         return(<></>);
@@ -81,7 +91,10 @@ export default function Cards() {
                 <DuaLink />
             </View>
             <Dua />
-            <NamesLink />
+            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <NamesLink />
+                <CalendarLink />
+            </View>
             <Hadith />
         </View>
     )}
