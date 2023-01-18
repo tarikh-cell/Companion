@@ -18,7 +18,7 @@ export default function Navigation() {
           <Item route="Reader" itemStyle={styles.item}  name="book" color={theme.secondary} index={1} num={select} setNum={setSelect} />
           <Item route="Player" itemStyle={styles.item}  name="meter" color={theme.secondary} index={2} num={select} setNum={setSelect} />
           <Item route="Home" itemStyle={styles.item} name="home" color={theme.secondary} index={0} num={select} setNum={setSelect} />
-          <Item route="Daily" itemStyle={styles.item} name="project" color={theme.secondary} index={3} num={select} setNum={setSelect} />
+          <Item route="Calendar" itemStyle={styles.item} name="calendar" color={theme.secondary} index={3} num={select} setNum={setSelect} />
         </>
          : null }
         <CloseItem itemStyle={styles.item} name="stack" alt="grabber" color={theme.secondary} hide={hide} setHide={setHide} />

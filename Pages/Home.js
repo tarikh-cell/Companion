@@ -1,7 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View, TouchableOpacity, ActivityIndicator, ScrollView } from 'react-native';
-import { useState, useContext } from 'react';
-import SettingsContext from '../SettingsContext';
 import { useFonts } from 'expo-font';
 import Widget from '../components/Widget';
 import Cards from '../components/Cards';
@@ -10,13 +8,12 @@ import { colorScheme } from '../components/Color';
 
 export default function HomeScreen({ navigation }) {
     let [fontsLoaded] = useFonts({'Raleway': require('../assets/fonts/Raleway-Regular.ttf')});
-    const { settings, setSettings } = useContext(SettingsContext);
     let theme = colorScheme();
 
     const TopBar = () => {
       return(
         <View style={styles.topbar}>
-          <TouchableOpacity style={styles.btnPress} onPress={() => navigation.navigate('Settings')}><Feather name="bar-chart-2" size={24} color={theme.secondary} style={{transform: [{rotate: "90deg"}, {scaleX: -1}]}} /></TouchableOpacity>
+          <TouchableOpacity style={styles.btnPress} onPress={() => navigation.navigate('Settings')}><Feather name="bar-chart-2" size={24} color={'#000'} style={{transform: [{rotate: "90deg"}, {scaleX: -1}]}} /></TouchableOpacity>
         </View>
       );
     }

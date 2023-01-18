@@ -2,8 +2,10 @@ import { StyleSheet, Text, View, ActivityIndicator, ScrollView, RefreshControl }
 import { useEffect, useState, useCallback, useContext } from 'react';
 import SettingsContext from '../SettingsContext';
 import { Ionicons } from '@expo/vector-icons';
+import { colorScheme } from '../components/Color';
 
 export default function Widget() {
+    let theme = colorScheme();
     const [date, setDate] = useState('');
     const [times, setTimes] = useState(''); 
     const [loading, setLoading] = useState(true); 
@@ -164,11 +166,11 @@ export default function Widget() {
     const PrayerTimes = () => {
         return(
             <View style={{flexDirection: 'row', padding: 10, justifyContent: 'space-evenly', margin: 5, borderRadius: 12}}>
-                <Text style={styles.text}>Fajr{'\n'}{times.Fajr}</Text>
-                <Text style={styles.text}>Dhuhr{'\n'}{times.Dhuhr}</Text>
-                <Text style={styles.text}>Asr{'\n'}{times.Asr}</Text>
-                <Text style={styles.text}>Maghrib{'\n'}{times.Maghrib}</Text>
-                <Text style={styles.text}>Isha{'\n'}{times.Isha}</Text>
+                <Text style={[styles.text, {color: theme.secondary}]}>Fajr{'\n'}{times.Fajr}</Text>
+                <Text style={[styles.text, {color: theme.secondary}]}>Dhuhr{'\n'}{times.Dhuhr}</Text>
+                <Text style={[styles.text, {color: theme.secondary}]}>Asr{'\n'}{times.Asr}</Text>
+                <Text style={[styles.text, {color: theme.secondary}]}>Maghrib{'\n'}{times.Maghrib}</Text>
+                <Text style={[styles.text, {color: theme.secondary}]}>Isha{'\n'}{times.Isha}</Text>
             </View>
         );
     }
@@ -179,21 +181,21 @@ export default function Widget() {
       return(
         <View style={styles.card}>
             <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center'}} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
-                <View style={{padding: 30, borderRadius: 25, backgroundColor: '#fff', width: '80%', elevation: 5, marginBottom: 4,}}>
+                <View style={{padding: 30, borderRadius: 25, backgroundColor: theme.primary, width: '80%', elevation: 5, marginBottom: 4, shadowColor: theme.secondary}}>
                     <Ionicons name="notifications" size={14} color="#e8def5" style={{alignSelf: 'flex-end'}} />
                     <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
                         <View>
-                            <Text style={[styles.text, {fontSize: 17}]}>{getNextPrayer()} </Text>
+                            <Text style={[styles.text, {fontSize: 17, color: theme.secondary}]}>{getNextPrayer()} </Text>
                             <Text style={[styles.text, {fontSize: 20, color: '#4dc591'}]}>{checkTimeLeft()}{getSecs()}</Text>
                             <Text style={[styles.text, {fontSize: 15, color: '#e8def5'}]}>at {getNextPrayerTime()}</Text>
                         </View>
                         <View>
-                            <Text style={[styles.text, {fontSize: 17}]}>Now:</Text>
+                            <Text style={[styles.text, {fontSize: 17, color: theme.secondary}]}>Now:</Text>
                             <Text style={[styles.text, {fontSize: 20, color: '#4dc591'}]}>{getCurrentPrayer()}</Text>
                             <Text style={[styles.text, {fontSize: 15, color: '#e8def5'}]}></Text>
                         </View>
                     </View>
-                    <Text style={[styles.text,{fontSize: 20}]}>{date}</Text>
+                    <Text style={[styles.text,{fontSize: 20, color: theme.secondary}]}>{date}</Text>
                     <Text style={[styles.text, {fontSize: 12, marginTop: 5, color: '#308695'}]}><Ionicons name="location" size={12} color="#308695" />{settings[0]}, {settings[1]}</Text> 
                 </View>
             </ScrollView>

@@ -1,11 +1,10 @@
-import { StyleSheet, Text, View, TouchableOpacity, Pressable } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import SettingsContext from '../SettingsContext';
 import { colorScheme } from '../components/Color';
 import { StatusBar } from 'expo-status-bar';
 import { useState, useContext, useEffect } from 'react';
-import { MaterialIcons } from '@expo/vector-icons';
 
-export default function Calendar() {
+export default function Calendar({ navigation }) {
     let theme = colorScheme();
     const [loading, setLoading] = useState(true)
     const [loaded, setLoaded] = useState(true)
@@ -52,14 +51,14 @@ export default function Calendar() {
     }
 
     const displaySlot = (arr, gregorianDate, x) => {
-        let col = 'black'
+        let col = {backgroundColor: theme.primary, padding:15}
         if (selected == x){
-            col = 'white'
+            col = {backgroundColor: '#e3f6fd', borderRadius: 50, padding: 15}
         }
         return(
-            <TouchableOpacity key={x} onPress={() => {setSelected(x); setDay(arr[x])}}>
-                <Text style={{color: col}}>{gregorianDate[x]}</Text>
-                <Text style={{fontSize: 10, color: col, alignSelf: 'center'}}>{parseInt(arr[x])}</Text>
+            <TouchableOpacity style={col} key={x} onPress={() => {setSelected(x); setDay(arr[x])}}>
+                <Text style={{color: theme.secondary, fontFamily: 'Raleway'}}>{gregorianDate[x]}</Text>
+                <Text style={{fontSize: 10, color: '#308695', alignSelf: 'center', fontFamily: 'Raleway'}}>{parseInt(arr[x])}</Text>
             </TouchableOpacity>
         )
     }
@@ -81,40 +80,22 @@ export default function Calendar() {
     const displayPrayers = (holiArr) => {
         if (loaded){
             return (
-                <Text style={{alignSelf: 'center'}}>Choose Date to view Prayer Times</Text>
+                <Text style={{alignSelf: 'center', color: '#308695', fontFamily: 'Raleway'}}>Choose Date to view Prayer Times</Text>
             )
         } else {
             return(
                 <View>
-                    <Text style={{alignSelf: 'center'}}>{day} {holiArr[selected]}</Text>  
-                    <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                        <View><Text>Fajr</Text><Text>{timings.Fajr}</Text></View>
-                        <View><Text>Dhuhr</Text><Text>{timings.Dhuhr}</Text></View>
-                        <View><Text>Asr</Text><Text>{timings.Asr}</Text></View>
-                        <View><Text>Maghrib</Text><Text>{timings.Maghrib}</Text></View>
-                        <View><Text>Isha</Text><Text>{timings.Isha}</Text></View>
+                    <Text style={{alignSelf: 'center', margin: 20, fontFamily: 'Raleway', color: '#308695'}}>{day} {holiArr[selected]}</Text>  
+                    <View style={{flexDirection: 'row', justifyContent: 'space-evenly', color: theme.secondary}}>
+                        <Text style={{color: theme.secondary, fontFamily: 'Raleway'}}>Fajr{"\n"}{timings.Fajr}</Text>
+                        <Text style={{color: theme.secondary, fontFamily: 'Raleway'}}>Dhuhr{"\n"}{timings.Dhuhr}</Text>
+                        <Text style={{color: theme.secondary, fontFamily: 'Raleway'}}>Asr{"\n"}{timings.Asr}</Text>
+                        <Text style={{color: theme.secondary, fontFamily: 'Raleway'}}>Maghrib{"\n"}{timings.Maghrib}</Text>
+                        <Text style={{color: theme.secondary, fontFamily: 'Raleway'}}>Isha{"\n"}{timings.Isha}</Text>
                     </View>
                 </View>
             );
         }
-    }
-
-    const increaseMonth = () => {
-        if (month == 12){
-            setMonth(1)
-        } else {
-            setMonth(month + 1)
-        }
-        setLoaded(true)
-    }
-
-    const decreaseMonth = () => {
-        if (month == 1){
-            setMonth(12)
-        } else {
-            setMonth(month - 1)
-        }
-        setLoaded(true)
     }
 
     if (loading) {
@@ -124,36 +105,30 @@ export default function Calendar() {
         let engArr = monthData.map((number) => number.gregorian.day); 
         let holiArr = monthData.map((number) => number.hijri.holidays); 
         return(
-        <View style={[styles.container, {backgroundColor: theme.primary}]}>
-            <StatusBar style="auto" />
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <TouchableOpacity onPress={() => decreaseMonth()}>
-                    <MaterialIcons name="arrow-left" size={24} color="black" />
+            <View style={[styles.container, {backgroundColor: theme.primary, alignItems: 'stretch'}]}>
+                <StatusBar style="auto" />
+                <TouchableOpacity style={{alignSelf: 'flex-start', padding: 15}} onPress={() => navigation.goBack()}>
+                    <Text style={{color: '#308695', fontFamily: 'Raleway'}}>Back</Text>
                 </TouchableOpacity>
-                <Text>{monthData[selected].gregorian.month.en} {monthData[selected].gregorian.year}</Text>
-                <TouchableOpacity onPress={() => increaseMonth()}>
-                    <MaterialIcons name="arrow-right" size={24} color="black" />
-                </TouchableOpacity>
+                <Text style={{alignSelf: 'center', margin: 20, fontSize: 20, fontFamily: 'Raleway', color: theme.secondary}}>{selected+1} {monthData[month].gregorian.month.en} {monthData[selected].gregorian.year}</Text>
+                <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                    {displayGrid(arr, engArr, holiArr, 0, 7)}
+                </View>
+                <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                    {displayGrid(arr, engArr, holiArr, 7, 14)}
+                </View>
+                <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                    {displayGrid(arr, engArr, holiArr, 14, 21)}
+                </View>
+                <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                    {displayGrid(arr, engArr, holiArr, 21, 28)}
+                </View>
+                <View style={{flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-evenly'}}>
+                    {displayGrid(arr, engArr, holiArr, 28, arr.length)}
+                </View>
+                {displayPrayers(holiArr)}   
             </View>
-
-            <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                {displayGrid(arr, engArr, holiArr, 0, 7)}
-            </View>
-            <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                {displayGrid(arr, engArr, holiArr, 7, 14)}
-            </View>
-            <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                {displayGrid(arr, engArr, holiArr, 14, 21)}
-            </View>
-            <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                {displayGrid(arr, engArr, holiArr, 21, 28)}
-            </View>
-            <View style={{flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-evenly'}}>
-                {displayGrid(arr, engArr, holiArr, 28, arr.length)}
-            </View>
-            {displayPrayers(holiArr)}   
-        </View>
-    )}
+        )}
 }
 
 const styles = StyleSheet.create({

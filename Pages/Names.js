@@ -1,8 +1,8 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { colorScheme } from '../components/Color';
 import husna from '../data/names';
 
-export default function Names() {
+export default function Names({ navigation }) {
     const names = ['2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', '0', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^', '_', '`', '{', '|', '}', '~', '¡', '¢', '£', '¤','¥', '¦', '!']
     let theme = colorScheme();
 
@@ -22,6 +22,9 @@ export default function Names() {
 
     return(
         <View style={[styles.container, {backgroundColor: theme.primary}]}>
+            <TouchableOpacity style={{alignSelf: 'flex-start', padding: 15}} onPress={() => navigation.goBack()}>
+                <Text style={{color: '#308695', fontFamily: 'Raleway'}}>Back</Text>
+            </TouchableOpacity>
             <FlatList
                 horizontal={false}
                 numColumns={2}

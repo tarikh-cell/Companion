@@ -9,6 +9,7 @@ import { colorScheme } from '../components/Color';
 
 export default function Cards() {
     let [fontsLoaded] = useFonts({'Husna': require('../assets/fonts/Husna.ttf')});
+    let theme = colorScheme();
     const navigation = useNavigation();
     const names = ['2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-', '.', '/', '0', ':', ';', '<', '=', '>', '?', '@', '(', '\\', ']', '^', '_', '`', '{', '|', '}', '~', '¡', '¢', '£', '¥', '¦', '!']
     const d = new Date();
@@ -20,17 +21,17 @@ export default function Cards() {
 
     const Name = () => {
         return(
-            <View style={[styles.card, {backgroundColor: '#fff', flexDirection: 'row'}]}>
+            <View style={[styles.card, {backgroundColor: theme.primary, shadowColor: theme.secondary, flexDirection: 'row'}]}>
                 <Text style={styles.text}>{names[random]}</Text>
-                <Text><Text>{husna[random].translation}</Text>{"\n"}<Text style={{fontSize: 12, color: '#308695'}}>{husna[random].transliteration}</Text></Text>
+                <Text><Text style={{color: theme.secondary}}>{husna[random].translation}</Text>{"\n"}<Text style={{fontSize: 12, color: '#308695'}}>{husna[random].transliteration}</Text></Text>
             </View>
         );
     }
 
     const Dua = () => {
         return(
-            <View style={[styles.card, {backgroundColor: '#fff', width: '80%'}]}>
-                <Text>Dua</Text>
+            <View style={[styles.card, {backgroundColor: theme.primary, shadowColor: theme.secondary, width: '80%'}]}>
+                <Text style={{color: theme.secondary}}>Dua</Text>
                 <Text style={{fontSize: 15, color: '#308695', textAlign: 'center', padding: 5}}>{duas[rand].zekr}</Text>
                 <Text style={{fontSize: 12, color: '#308695', textAlign: 'center', padding: 2}}>{duas[rand].translation}</Text>
             </View>
@@ -40,10 +41,10 @@ export default function Cards() {
     const DuaLink = () => {
         return(
             <>
-            <TouchableOpacity style={[styles.card, {backgroundColor: '#fff', width: '17%'}]} onPress={() => navigation.navigate("Counter")}>
+            <TouchableOpacity style={[styles.card, {backgroundColor: theme.primary, shadowColor: theme.secondary, width: '17%'}]} onPress={() => navigation.navigate("Dua")}>
                 <MaterialCommunityIcons name="hands-pray" size={24} color="#4dc591" />
             </TouchableOpacity>
-            <TouchableOpacity style={[styles.card, {backgroundColor: '#fff', width: '17%'}]} onPress={() => navigation.navigate("Counter")}>
+            <TouchableOpacity style={[styles.card, {backgroundColor: theme.primary, shadowColor: theme.secondary, width: '17%'}]} onPress={() => navigation.navigate("Counter")}>
                 <MaterialCommunityIcons name="abacus" size={24} color="#308695" />
             </TouchableOpacity>
             </>
@@ -52,9 +53,9 @@ export default function Cards() {
 
     const Hadith = () => {
         return(
-            <View style={[styles.card, {backgroundColor: '#fff', width: '80%'}]}>
+            <View style={[styles.card, {backgroundColor: theme.primary, shadowColor: theme.secondary, width: '80%'}]}>
                 <Text style={{fontSize: 15, color: '#308695', textAlign: 'center', padding: 5}}>Hadith</Text>
-                <Text style={{fontSize: 12, textAlign: 'center', padding: 5}}>{hadith[ran].narration}</Text>
+                <Text style={{fontSize: 12, textAlign: 'center', padding: 5, color: theme.secondary}}>{hadith[ran].narration}</Text>
                 <Text style={{fontSize: 15, color: '#308695', textAlign: 'center', padding: 5}}>{hadith[ran].hadith}</Text>
                 <Text style={{fontSize: 12, color: '#308695', textAlign: 'center', padding: 2}}>{hadith[ran].book}</Text>
             </View>
@@ -64,22 +65,32 @@ export default function Cards() {
     const NamesLink = () => {
         return(
             <>
-                <TouchableOpacity style={[styles.card, {backgroundColor: '#fff', width: '17%', padding: 17}]} onPress={() => navigation.navigate("Names")}>
+                <TouchableOpacity style={[styles.card, {backgroundColor: theme.primary, shadowColor: theme.secondary, width: '17%', padding: 17}]} onPress={() => navigation.navigate("Names")}>
                     <Text style={{color: "#4dc591", fontSize: 24}}>99</Text>
                 </TouchableOpacity>
             </>
         )
     }
 
-    const CalendarLink = () => {
+    const MorningLink = () => {
         return(
             <>
-                <TouchableOpacity style={[styles.card, {backgroundColor: '#fff', width: '17%'}]} onPress={() => navigation.navigate("Calendar")}>
-                    <MaterialCommunityIcons name="calendar" size={24} color="black" />
+                <TouchableOpacity style={[styles.card, {backgroundColor: theme.primary, shadowColor: theme.secondary, width: '17%'}]} onPress={() => navigation.navigate("Daily", {type: 'morning'})}>
+                    <MaterialCommunityIcons name="white-balance-sunny" size={24} color={theme.secondary} />
                 </TouchableOpacity>
             </>
         )
-    }    
+    }   
+    
+    const EveningLink = () => {
+        return(
+            <>
+                <TouchableOpacity style={[styles.card, {backgroundColor: theme.primary, shadowColor: theme.secondary, width: '17%'}]} onPress={() => navigation.navigate("Daily", {type: 'evening'})}>
+                    <MaterialCommunityIcons name="moon-waning-crescent" size={24} color="#e3f6fd" />
+                </TouchableOpacity>
+            </>
+        )
+    } 
 
     if (!fontsLoaded) {
         return(<></>);
@@ -88,12 +99,13 @@ export default function Cards() {
         <View style={{alignItems: 'center'}}>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
                 <Name />
-                <DuaLink />
+                <NamesLink />               
             </View>
             <Dua />
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <NamesLink />
-                <CalendarLink />
+                <DuaLink />
+                <MorningLink />
+                <EveningLink />
             </View>
             <Hadith />
         </View>
