@@ -1,19 +1,17 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, FlatList, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, FlatList } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Slider from '@react-native-community/slider';
 import { colorScheme } from '../components/Color';
 import surahNames from '../data/surahNames';
-import audioa from '../data/sheikhmaher';
 import audioy from '../data/sheikhyasser';
 import { Audio } from 'expo-av';
+
 export default function Player() {
     let theme = colorScheme();
     const [audio, setAudio] = useState(new Audio.Sound());
-    const [close, setClose] = useState(false);
     const [index, setIndex] = useState(1);
-    const [choice, setChoice] = useState(0); 
     const [loaded, setLoaded] = useState(false);
     const [playing, setPlaying] = useState(false);
     const [duration, setDuration] = useState(null);
@@ -31,15 +29,11 @@ export default function Player() {
         } catch(e){ console.log(e) }}
         loadAudio();
         return () => {if (loaded) audio.unloadAsync()}
-    }, [close])
+    }, [])
 
     const playSound = async () => {
         if (!loaded) {
-            if (choice == 1) {
-                const { sound } = await audio.loadAsync(audioa[index]);
-            } else {
-                const { sound } = await audio.loadAsync(audioy[index]);
-            }  
+            const { sound } = await audio.loadAsync(audioy[index]);
             setLoaded(true);
         }      
         await audio.playAsync();
@@ -57,16 +51,10 @@ export default function Player() {
         setPlaying(false);
     }
 
-    const stopSound = async () => {
-        await audio.stopAsync();
-        setPlaying(false);
-    }
-
     const skipTrack = async () => {
         await audio.unloadAsync();
         setPlaying(false);
         setLoaded(false);
-        // playSound();
     }
 
     const setNextIndex = (number) => {
@@ -127,9 +115,6 @@ export default function Player() {
     return(
         <View style={[styles.container, {backgroundColor: theme.primary}]}>
             <StatusBar style='transparent' />
-            {/* <TouchableOpacity onPress={() => setChoice(0)}><Text>Sheikh Yasser Al Dosari</Text></TouchableOpacity>
-            <TouchableOpacity onPress={() => setChoice(1)}><Text>Sheikh Maher Al Muaqily</Text></TouchableOpacity> */}
-            {/* <Reciter /> */}
             <SurahSelect />
             {/* <Player /> */}
             <Modal animationType="slide"
@@ -137,7 +122,7 @@ export default function Player() {
                     visible={modalVisible}
                     onRequestClose={() => setModalVisible(!modalVisible)}>
                 <View style={{flex: 1, backgroundColor: theme.primary}}>
-                    <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary, borderColor: theme.primary, shadowColor: theme.secondary, alignSelf: 'flex-end', margin: 20}]} onPress={() => {setModalVisible(!modalVisible); setLoaded(false); audio.unloadAsync()}}>
+                    <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary, borderColor: theme.primary, shadowColor: theme.secondary, alignSelf: 'flex-end', margin: 20}]} onPress={() => {setModalVisible(!modalVisible); setLoaded(false); setPlaying(false); audio.unloadAsync()}}>
                         <MaterialCommunityIcons name="close" size={30} color={theme.secondary} />
                     </TouchableOpacity>
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>

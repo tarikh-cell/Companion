@@ -1,14 +1,15 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Button, TouchableOpacity, ScrollView, Switch } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Switch } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useState, useContext } from 'react';
 import { Octicons } from '@expo/vector-icons';
 import cities from '../data/cities';
 import SettingsContext from '../SettingsContext';
+import { colorScheme } from '../components/Color';
 
 export default function Settings({ navigation }) {
+    let theme = colorScheme();
     const [open, setOpen] = useState(false);
-    const [dark, setDark] = useState(false);
     const { settings, updateSettings, updateLocation } = useContext(SettingsContext);
 
     const storeData = async () => {
@@ -21,7 +22,7 @@ export default function Settings({ navigation }) {
       const [open, setOpen] = useState(false);
       return(
           <>
-              <TouchableOpacity style={styles.countrycontainer} onPress={() => setOpen(!open)}><Text style={styles.countryname}>{country.name}</Text></TouchableOpacity>
+              <TouchableOpacity style={styles.countrycontainer} onPress={() => setOpen(!open)}><Text style={[styles.countryname, {color: theme.secondary}]}>{country.name}</Text></TouchableOpacity>
               {open && country.city.map((value, index) =>
                   <TouchableOpacity style={styles.citycontainer} key={index} onPress={() => {updateLocation(country.name, value); setOpen(!open);}}>
                     <Text style={styles.countryname}>{value}</Text></TouchableOpacity>
@@ -30,12 +31,42 @@ export default function Settings({ navigation }) {
       );
   }
 
-  const CalculationMethod = () => {
+  const AngleMethod = () => {
+    const [opened, setOpened] = useState(false);
     return(
-      <View style={{flexDirection: 'row'}}>
-        <TouchableOpacity onPress={() => updateSettings("0", 3)}><Text>Angle Based</Text></TouchableOpacity>
-        <TouchableOpacity onPress={() => updateSettings("1", 3)}><Text>Angle Based</Text></TouchableOpacity>
-        <TouchableOpacity onPress={() => updateSettings("2", 3)}><Text>Angle Based</Text></TouchableOpacity>
+      <View style={[styles.section, {justifyContent: 'space-between', alignItems: 'center'}]}>
+        <TouchableOpacity onPress={() => setOpened(!opened)}><Text style={[styles.sectiontitle, {color: theme.secondary}]}>Angle Method:</Text></TouchableOpacity>
+        {opened ?
+        <><TouchableOpacity onPress={() => {updateSettings("0", 3); setOpened(!opened)}}><Text style={styles.sectiontitle}>Middle of the Night</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => {updateSettings("1", 3); setOpened(!opened)}}><Text style={styles.sectiontitle}>One Seventh</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => {updateSettings("2", 3); setOpened(!opened)}}><Text style={styles.sectiontitle}>Angle Based</Text></TouchableOpacity></> : null }
+      </View>
+    );
+  }
+
+  const CalculationMethod = () => {
+    const [opened, setOpened] = useState(false);
+    return(
+      <View style={[styles.section, {justifyContent: 'space-between', alignItems: 'center'}]}>
+        <TouchableOpacity onPress={() => setOpened(!opened)}><Text style={[styles.sectiontitle, {color: theme.secondary}]}>Calculation Method:</Text></TouchableOpacity>
+        {opened ?
+        <><TouchableOpacity onPress={() => {updateSettings("0", 5); setOpened(!opened)}}><Text style={styles.sectiontitle}>Shia Ithna-Ansari</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => {updateSettings("1", 5); setOpened(!opened)}}><Text style={styles.sectiontitle}>University of Islamic Sciences, Karachi</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => {updateSettings("2", 5); setOpened(!opened)}}><Text style={styles.sectiontitle}>Islamic Society of North America</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => {updateSettings("3", 5); setOpened(!opened)}}><Text style={styles.sectiontitle}>Muslim World League</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => {updateSettings("8", 5); setOpened(!opened)}}><Text style={styles.sectiontitle}>Gulf Region</Text></TouchableOpacity></> : null }
+      </View>
+    );
+  }
+
+  const School = () => {
+    const [opened, setOpened] = useState(false);
+    return(
+      <View style={[styles.section, {justifyContent: 'space-between', alignItems: 'center'}]}>
+        <TouchableOpacity onPress={() => setOpened(!opened)}><Text style={[styles.sectiontitle, {color: theme.secondary}]}>School:</Text></TouchableOpacity>
+        {opened ?
+        <><TouchableOpacity onPress={() => {updateSettings("0", 4); setOpened(!opened)}}><Text style={styles.sectiontitle}>Shafi'i</Text></TouchableOpacity>
+        <TouchableOpacity onPress={() => {updateSettings("1", 4); setOpened(!opened)}}><Text style={styles.sectiontitle}>Hanafi</Text></TouchableOpacity></>: null }
       </View>
     );
   }
@@ -66,21 +97,30 @@ export default function Settings({ navigation }) {
         return "true"
       }
     }
+
+    const ModeToggle = () => {
+      return(
+        <View style={[styles.section, {flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}]}>
+          <Text style={[styles.sectiontitle, {color: theme.secondary}]}>Dark Mode: </Text>
+          <Switch value={getBoolVal()} onValueChange={() => {updateSettings(getOpposite(),2)}}  />
+        </View>
+      )
+    }
     
     return(
-      <View style={[styles.container, {backgroundColor: settings[2] == "true" ? "#000" : "#fff"}]}>
+      <View style={[styles.container, {backgroundColor: theme.primary}]}>
         <StatusBar style='auto' />
         <View style={styles.background}></View>
         <Topbar />
-        <ScrollView style={styles.card} contentContainerStyle={{justifyContent: 'center', alignItems: 'center'}}>
-          <Button title="Save" onPress={() => storeData()} />
+        <ScrollView style={[styles.card, {backgroundColor: theme.primary, shadowColor: theme.secondary}]} contentContainerStyle={{justifyContent: 'center', alignItems: 'center'}}>
+          <TouchableOpacity style={styles.section} onPress={() => storeData()}><Text style={[styles.sectiontitle, {color: theme.secondary}]}>Save Changes</Text></TouchableOpacity>
           
-          <Text>{dark ? 'on':'off'}</Text>
-          <Switch value={getBoolVal()} onValueChange={() => {updateSettings(getOpposite(),2)}}  />
-
+          <ModeToggle />
+          <AngleMethod />
           <CalculationMethod />
+          <School />
 
-          <TouchableOpacity onPress={() => setOpen(!open)}><Text>Current City: </Text></TouchableOpacity>
+          <TouchableOpacity style={styles.section} onPress={() => setOpen(!open)}><Text style={[styles.sectiontitle, {color: theme.secondary}]}>Current City: </Text></TouchableOpacity>
           { open ? cities.map((value, index) => <City country={value} key={index} />) : null}
         </ScrollView>
       </View>
@@ -127,8 +167,7 @@ const styles = StyleSheet.create({
       marginTop: '2%',
       marginBottom: '20%',
       width: '80%',
-      elevation: 10,
-      backgroundColor: '#fff',
+      elevation: 5,
       borderRadius: 12,
       padding: 10,
     },
@@ -147,5 +186,20 @@ const styles = StyleSheet.create({
     countryname: {
         fontFamily: 'Raleway',
         fontSize: 20,
+        color: '#4dc591'
     },
+    sectiontitle: {
+      textAlign: 'center', 
+      fontSize: 15, 
+      fontFamily: 'Raleway',
+      padding: 10,
+      color: '#4dc591',
+    },
+    section: {
+      borderRadius: 12,
+      borderColor: '#308695',
+      borderWidth: 1,      
+      width: '100%',
+      margin: 5
+    }
 });

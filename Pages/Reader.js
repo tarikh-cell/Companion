@@ -114,7 +114,7 @@ export default function Reader() {
                 <FlatList
                     data={arr}
                     renderItem={renderIte}
-                    keyExtractor={item => item.id}
+                    keyExtractor={(item, index) => index}
                 />
                 <ToolBar />
             </>

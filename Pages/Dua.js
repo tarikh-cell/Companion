@@ -48,7 +48,7 @@ export default function Dua({ navigation }) {
             <FlatList
                 data={allDuas}
                 renderItem={renderItem}
-                keyExtractor={item => item.id}
+                keyExtractor={(item, index) => index}
                 style={{width: '100%'}}
             />
         </View>

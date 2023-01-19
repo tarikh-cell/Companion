@@ -37,7 +37,7 @@ export default function Calendar({ navigation }) {
     }
 
     const fetchDailyData = () => {
-        fetch('http://api.aladhan.com/v1/timingsByCity/' + monthData[selected].gregorian.date + '?city='+settings[0]+'&country='+settings[1], {
+        fetch('http://api.aladhan.com/v1/timingsByCity/' + monthData[selected].gregorian.date + '?city='+settings[0]+'&country='+settings[1]+'&method='+settings[5]+'&school='+settings[4]+'&latitudeAdjustmentMethod='+settings[3], {
           method: 'GET',
         })
           .then(response => response.json())

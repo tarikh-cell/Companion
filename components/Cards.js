@@ -75,7 +75,7 @@ export default function Cards() {
     const MorningLink = () => {
         return(
             <>
-                <TouchableOpacity style={[styles.card, {backgroundColor: theme.primary, shadowColor: theme.secondary, width: '17%'}]} onPress={() => navigation.navigate("Daily", {type: 'morning'})}>
+                <TouchableOpacity style={[styles.card, {backgroundColor: theme.primary, shadowColor: theme.secondary, width: '17%', padding: 19}]} onPress={() => navigation.navigate("Daily", {type: 'Morning'})}>
                     <MaterialCommunityIcons name="white-balance-sunny" size={24} color={theme.secondary} />
                 </TouchableOpacity>
             </>
@@ -85,7 +85,7 @@ export default function Cards() {
     const EveningLink = () => {
         return(
             <>
-                <TouchableOpacity style={[styles.card, {backgroundColor: theme.primary, shadowColor: theme.secondary, width: '17%'}]} onPress={() => navigation.navigate("Daily", {type: 'evening'})}>
+                <TouchableOpacity style={[styles.card, {backgroundColor: theme.primary, shadowColor: theme.secondary, width: '17%'}]} onPress={() => navigation.navigate("Daily", {type: 'Evening'})}>
                     <MaterialCommunityIcons name="moon-waning-crescent" size={24} color="#e3f6fd" />
                 </TouchableOpacity>
             </>

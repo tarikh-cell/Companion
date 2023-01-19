@@ -4,7 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const SettingsContext = createContext();
 
 export function SettingsProvider({children}) {
-    const [settings, setSettings] = useState(["United Kingdom", "London", "false", "0", "0", "0"]);
+    const [settings, setSettings] = useState(["United Kingdom", "London", "false", "0", "0", "3"]);
 
     useEffect(() => {
         AsyncStorage.getItem('@storage_Key')

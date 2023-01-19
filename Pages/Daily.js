@@ -7,13 +7,13 @@ import night from '../data/night.json';
 
 export default function Daily({ route, navigation }) {    
     let theme = colorScheme();
-    const [data, setData] = useState(route.params.type == "morning" ? day : night);
+    const [data, setData] = useState(route.params.type == "Morning" ? day : night);
 
-    const renderItem = ({ item }) => (
-        <Card value={item} />
+    const renderItem = ({ item, index }) => (
+        <Card value={item} id={index} />
     );
 
-    const Card = ({value}) => {
+    const Card = ({value, id}) => {
         return(
             <View style={[styles.item, {backgroundColor: theme.primary, shadowColor: theme.secondary} ]}>
                 <Text style={[styles.itemtext, {color: '#308695'} ]}>{value.zekr}</Text>
@@ -28,10 +28,11 @@ export default function Daily({ route, navigation }) {
             <TouchableOpacity style={{alignSelf: 'flex-start', padding: 15}} onPress={() => navigation.goBack()}>
                 <Text style={{color: '#308695', fontFamily: 'Raleway'}}>Back</Text>
             </TouchableOpacity>
+            <Text style={{color: theme.secondary, fontFamily: 'Raleway', fontSize: 15}}>{route.params.type} Remeberance</Text>
             <FlatList
                 data={data}
                 renderItem={renderItem}
-                keyExtractor={item => item.id}
+                keyExtractor={(item, index) => index}
                 style={{width: '100%'}}
             />
         </View>
