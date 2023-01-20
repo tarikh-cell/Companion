@@ -6,8 +6,9 @@ import duas from '../data/duas.json'
 import hadith from '../data/hadith.json';
 import { useNavigation } from '@react-navigation/native';
 import { colorScheme } from '../components/Color';
+import { memo } from 'react';
 
-export default function Cards() {
+function Cards() {
     let [fontsLoaded] = useFonts({'Husna': require('../assets/fonts/Husna.ttf')});
     let theme = colorScheme();
     const navigation = useNavigation();
@@ -128,3 +129,5 @@ const styles = StyleSheet.create({
         minHeight: 50,
     }
 });
+
+export default memo(Cards);

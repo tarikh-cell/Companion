@@ -5,42 +5,42 @@ import { useNavigation } from '@react-navigation/native';
 import { colorScheme } from './components/Color';
 
 export default function Navigation() {
+    let theme = colorScheme();
     const [select, setSelect] = useState(0);
     const [hide, setHide] = useState(true);
     const open = { width: '100%' }
-    const closed = { alignSelf: 'flex-end', right: 10, position: 'absolute' }
-    let theme = colorScheme();
+    const closed = { position: 'absolute', alignSelf: 'flex-end', right: 10 }
+    const navigation = useNavigation();
+
+    const Item = ({ route, name, index }) => {
+      return(
+        <TouchableOpacity style={[styles.item, {backgroundColor: index == select ? '#e3f6fd' : 'transparent', opacity: 0.7}]} onPress={() => {setSelect(index); navigation.navigate(route);}}>
+          <Octicons name={name} size={20} color={theme.secondary} />
+        </TouchableOpacity>
+      );
+    }
+
+    const CloseItem = ({ name, alt }) => {
+      return(
+          <TouchableOpacity style={[styles.item, {backgroundColor: hide ? 'transparent' : '#e3f6fd', opacity: 0.7}]} onPress={() => setHide(!hide)}>
+            <Octicons name={hide ? name : alt} size={20} color={theme.secondary} />  
+          </TouchableOpacity>
+      );
+    }
 
     return (
       <View style={[styles.container, hide ? open : closed, { backgroundColor: theme.primary } ]}> 
         { hide ?
         <>
-          <Item route="Reader" itemStyle={styles.item}  name="book" color={theme.secondary} index={1} num={select} setNum={setSelect} />
-          <Item route="Player" itemStyle={styles.item}  name="meter" color={theme.secondary} index={2} num={select} setNum={setSelect} />
-          <Item route="Home" itemStyle={styles.item} name="home" color={theme.secondary} index={0} num={select} setNum={setSelect} />
-          <Item route="Calendar" itemStyle={styles.item} name="calendar" color={theme.secondary} index={3} num={select} setNum={setSelect} />
+          <Item route="Reader" name="book" index={1} />
+          <Item route="Player" name="meter" index={2} />
+          <Item route="Home" name="home" index={0} />
+          <Item route="Calendar" name="calendar" index={3}  />
         </>
          : null }
-        <CloseItem itemStyle={styles.item} name="stack" alt="grabber" color={theme.secondary} hide={hide} setHide={setHide} />
+        <CloseItem name="stack" alt="grabber" />
       </View>
     );
-}
-
-function CloseItem({ itemStyle, name, alt, color, hide, setHide }) {
-  return(
-      <TouchableOpacity style={[itemStyle, {backgroundColor: hide ? 'transparent' : '#e3f6fd', opacity: 0.7}]} onPress={() => setHide(!hide)}>
-        <Octicons name={hide ? name : alt} size={20} color={color} />  
-      </TouchableOpacity>
-  );
-}
-
-function Item({ route, itemStyle, name, color, index, num, setNum }) {
-  const navigation = useNavigation();
-  return(
-    <TouchableOpacity style={[itemStyle, {backgroundColor: index == num ? '#e3f6fd' : 'transparent', opacity: 0.7}]} onPress={() => {setNum(index); navigation.navigate(route);}}>
-      <Octicons name={name} size={20} color={color} />
-    </TouchableOpacity>
-  );
 }
 
 const styles = StyleSheet.create({
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-evenly',
-        paddingBottom: 10,
+        paddingVertical: 10,
     },
     item: {
         padding: 11,
@@ -59,11 +59,5 @@ const styles = StyleSheet.create({
         borderBottomStartRadius: 40,
         borderTopEndRadius: 50,
         borderTopStartRadius: 25,
-    },
-    specialItem: {
-        backgroundColor: '#00FA9A',
-        padding: 15,
-        borderRadius: 50,
-        height: 55
     }
 });

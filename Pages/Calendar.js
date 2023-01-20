@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator } from 'react-native';
 import SettingsContext from '../SettingsContext';
 import { colorScheme } from '../components/Color';
 import { StatusBar } from 'expo-status-bar';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext, useEffect, memo } from 'react';
 
-export default function Calendar({ navigation }) {
+function Calendar({ navigation }) {
     let theme = colorScheme();
     const [loading, setLoading] = useState(true)
     const [loaded, setLoaded] = useState(true)
@@ -99,7 +99,7 @@ export default function Calendar({ navigation }) {
     }
 
     if (loading) {
-        return(<></>)
+        return(<ActivityIndicator />)
     } else {
         let arr = monthData.map((number) => number.hijri.day + ' '+number.hijri.month.en+' '+number.hijri.year);
         let engArr = monthData.map((number) => number.gregorian.day); 
@@ -145,3 +145,5 @@ const styles = StyleSheet.create({
         height: '100%'
     }
 });
+
+export default memo(Calendar);

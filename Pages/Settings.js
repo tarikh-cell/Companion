@@ -155,7 +155,6 @@ const styles = StyleSheet.create({
       borderWidth: 1, 
       borderColor: '#ecf0ff',
       borderBottomStartRadius: 70, 
-      borderLeftWidth: 100, 
       transform: [{rotate: "-25deg"}],
     },
     title: {

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, VirtualizedList } from 'react-native';
 import { useFonts } from 'expo-font';
 import React, { useEffect, useState, memo } from 'react';
 import { StatusBar } from 'expo-status-bar';
@@ -121,11 +121,11 @@ export default function Reader() {
         );
     }
 
-    const Select = ({id, value, arabic, translation}) => {
+    const Select = ({id, name, arabic, translation}) => {
         return(
             <TouchableOpacity style={styles.surahlist} onPress={() => {setChoices(Number(id)); setModalVisible(!modalVisible)}}>
                 <View style={{flexDirection: 'row'}}><Text style={styles.listtext}>{id}</Text>
-                <Text style={{textAlignVertical: 'center', color: theme.secondary}}>{value}{"\n"}
+                <Text style={{textAlignVertical: 'center', color: theme.secondary}}>{name}{"\n"}
                 <Text style={{color: 'lightgrey', fontSize: 12}}>{translation}</Text></Text>
                 </View>
                 <Text style={{fontFamily: "Surah", fontSize: 60, color: '#4dc591'}}>{arabic}</Text>
@@ -134,15 +134,19 @@ export default function Reader() {
     }
 
     const renderItem = ({ item }) => (
-        <Select id={item.id} value={item.name} arabic={item.arabic} translation={item.translation} />
+        <Select id={item.id} name={item.name} arabic={item.arabic} translation={item.translation} />
     );
 
+    const getItemCount = _data => 114;
+    const getItem = (_data, index) => ({
+        id: _data[index].id,
+        name: _data[index].name,   
+        arabic: _data[index].arabic,
+        translation: _data[index].translation,
+      });
+
     if (!fontsLoaded || choice == null) {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.title}>Surah</Text>
-            </View>
-        );
+        return (<></>);
       } else {
         return(
             <View style={[styles.container, {backgroundColor: theme.primary} ]}>
@@ -150,14 +154,15 @@ export default function Reader() {
                 { modalVisible ?
                 <Surah />
                 : 
-                <>
-                <Text style={styles.title}>Surah</Text>
-                <FlatList
+                <VirtualizedList
                     data={surahNames}
                     renderItem={renderItem}
                     keyExtractor={item => item.id}
+                    initialNumToRender={10}
+                    getItemCount={getItemCount}
+                    getItem={getItem}
                     style={{width: '100%'}}
-                /></>}
+                />}
             </View>
     )}
 }

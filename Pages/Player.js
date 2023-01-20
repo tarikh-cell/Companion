@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, FlatList } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, VirtualizedList } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
@@ -63,13 +63,13 @@ export default function Player() {
         else { setIndex(number) }
     }
 
-    const Select = ({id, value, translation}) => {
+    const Select = ({id, name, translation}) => {
         return(
             <TouchableOpacity style={{width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderBottomWidth: 1, padding: 5, borderColor: '#e3f6fd'}} onPress={() => {setIndex(Number(id));setModalVisible(!modalVisible)}} >
                 <View style={{flexDirection: 'row'}}>
                 <Text style={{marginHorizontal: 20, textAlignVertical: 'center', color: '#4dc591'}}>{id}</Text>
                 <View style={{flexDirection: 'row'}}>
-                    <Text style={{textAlignVertical: 'center', color: theme.secondary}}>{value}{"\n"}
+                    <Text style={{textAlignVertical: 'center', color: theme.secondary}}>{name}{"\n"}
                     <Text style={{color: 'lightgrey', fontSize: 12}}>{translation}</Text></Text>
                 </View></View>
                 <MaterialCommunityIcons name='play-speed' size={20} color={theme.secondary} style={{alignSelf: 'center', marginHorizontal: 10}} />
@@ -78,17 +78,26 @@ export default function Player() {
     }
 
     const renderItem = ({ item }) => (
-        <Select id={item.id} value={item.name} translation={item.translation} />
+        <Select id={item.id} name={item.name} translation={item.translation} />
     );
+
+    const getItemCount = _data => 114;
+    const getItem = (_data, index) => ({
+        id: _data[index].id,
+        name: _data[index].name,   
+        translation: _data[index].translation,
+      });
 
     const SurahSelect = () => {
         return(
             <>
-                <FlatList
+                <VirtualizedList
                     data={surahNames}
                     renderItem={renderItem}
                     keyExtractor={item => item.id}
-                    contentContainerStyle={{}}
+                    initialNumToRender={20}
+                    getItemCount={getItemCount}
+                    getItem={getItem}
                     style={{width: '100%'}}
                 />
             </>

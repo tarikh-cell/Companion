@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, ActivityIndicator, ScrollView, RefreshControl } from 'react-native';
-import { useEffect, useState, useCallback, useContext } from 'react';
+import { StyleSheet, Text, View, ActivityIndicator, ScrollView } from 'react-native';
+import { useEffect, useState, useContext } from 'react';
 import SettingsContext from '../SettingsContext';
 import { Ionicons } from '@expo/vector-icons';
 import { colorScheme } from '../components/Color';
@@ -9,12 +9,7 @@ export default function Widget() {
     const [date, setDate] = useState('');
     const [times, setTimes] = useState(''); 
     const [loading, setLoading] = useState(true); 
-    const [refreshing, setRefreshing] = useState(false);
     const { settings } = useContext(SettingsContext);
-
-    const onRefresh = useCallback(() => {
-        fetchData();
-    }, [refreshing]);
 
     useEffect(() => {
         if (loading) { fetchData() }
@@ -41,7 +36,6 @@ export default function Widget() {
           .catch(error => {
             console.log(error)
           });
-        setRefreshing(false);
     }
 
     const checkPrayer = (prayer) => {
@@ -180,7 +174,7 @@ export default function Widget() {
     } else {
       return(
         <View style={styles.card}>
-            <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center'}} refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+            <ScrollView style={styles.container} contentContainerStyle={{alignItems: 'center'}}>
                 <View style={{padding: 30, borderRadius: 25, backgroundColor: theme.primary, width: '80%', elevation: 5, marginBottom: 4, shadowColor: theme.secondary}}>
                     <Ionicons name="notifications" size={14} color="#e8def5" style={{alignSelf: 'flex-end'}} />
                     <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
