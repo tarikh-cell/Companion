@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SettingsProvider } from './SettingsContext';
+import { View } from 'react-native';
 
 import HomeScreen from './pages/Home';
 import Settings from './pages/Settings';
@@ -12,11 +13,21 @@ import Counter from './pages/Counter';
 import Names from './pages/Names';
 import Calendar from './pages/Calendar';
 import Dua from './pages/Dua';
+import { colorScheme } from './components/Color';
 
 const Stack = createNativeStackNavigator();
 export default function App() {
   return (
     <SettingsProvider>
+      <Navigator />
+    </SettingsProvider>
+  );
+}
+
+function Navigator() {
+  let theme = colorScheme();
+  return(
+    <View style={{flex: 1, backgroundColor: theme.primary}}>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Home" screenOptions={{headerShown: false, presentation: 'transparentModal'}}>
           <Stack.Screen name="Home" component={HomeScreen} />
@@ -31,6 +42,6 @@ export default function App() {
         </Stack.Navigator>
         <Navigation />
       </NavigationContainer>
-    </SettingsProvider>
-  );
+    </View>
+  )
 }

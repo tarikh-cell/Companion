@@ -3,11 +3,11 @@ import SettingsContext from '../SettingsContext';
 import { colorScheme } from '../components/Color';
 import { StatusBar } from 'expo-status-bar';
 import { useState, useContext, useEffect, memo } from 'react';
+import { Feather } from '@expo/vector-icons';
 
 function Calendar({ navigation }) {
     let theme = colorScheme();
     const [loading, setLoading] = useState(true)
-    const [loaded, setLoaded] = useState(true)
     const [selected, setSelected] = useState((new Date).getDay())
     const [month, setMonth] = useState((new Date).getMonth() + 1)
     const [year, setYear] = useState((new Date).getFullYear())
@@ -43,7 +43,6 @@ function Calendar({ navigation }) {
           .then(response => response.json())
           .then(json => {
             setTimings(json.data.timings);
-            setLoaded(false);   
         })
         .catch(error => {
             console.log(error)
@@ -77,25 +76,27 @@ function Calendar({ navigation }) {
         return t;
     }
 
+    const Icon = ({ name, icon, time, colour, bgColor }) => {
+        return(
+            <View style={{flexDirection: 'row', alignItems: 'center', width: '100%', padding: 5}}>
+                <Text style={[styles.icon, {backgroundColor: bgColor}]}><Feather name={icon} size={24} color={colour} /></Text>
+                <Text style={{color: theme.secondary, fontFamily: 'Raleway'}}>{name}</Text>
+                <Text style={{color: theme.secondary, fontFamily: 'Raleway', marginLeft: 'auto', paddingRight: 20}}>{time}</Text>
+            </View>
+        )
+    }
+
     const displayPrayers = (holiArr) => {
-        if (loaded){
-            return (
-                <Text style={{alignSelf: 'center', color: '#308695', fontFamily: 'Raleway'}}>Choose Date to view Prayer Times</Text>
-            )
-        } else {
-            return(
-                <View>
-                    <Text style={{alignSelf: 'center', margin: 20, fontFamily: 'Raleway', color: '#308695'}}>{day} {holiArr[selected]}</Text>  
-                    <View style={{flexDirection: 'row', justifyContent: 'space-evenly', color: theme.secondary}}>
-                        <Text style={{color: theme.secondary, fontFamily: 'Raleway'}}>Fajr{"\n"}{timings.Fajr}</Text>
-                        <Text style={{color: theme.secondary, fontFamily: 'Raleway'}}>Dhuhr{"\n"}{timings.Dhuhr}</Text>
-                        <Text style={{color: theme.secondary, fontFamily: 'Raleway'}}>Asr{"\n"}{timings.Asr}</Text>
-                        <Text style={{color: theme.secondary, fontFamily: 'Raleway'}}>Maghrib{"\n"}{timings.Maghrib}</Text>
-                        <Text style={{color: theme.secondary, fontFamily: 'Raleway'}}>Isha{"\n"}{timings.Isha}</Text>
-                    </View>
-                </View>
-            );
-        }
+        return(
+            <View style={{justifyContent: 'space-between'}}>
+                <Text style={{alignSelf: 'center', fontFamily: 'Raleway', color: '#308695'}}>{day} {holiArr[selected]}</Text>  
+                <Icon name="Fajr" icon="sunrise" time={timings?.Fajr} colour="#FF69B4" bgColor="pink" />
+                <Icon name="Dhuhr" icon="sun"  time={timings?.Dhuhr} colour="yellow" bgColor="#FFD580" />
+                <Icon name="Asr" icon="cloud" time={timings?.Asr} colour="#0096FF" bgColor="#ADD8E6" />
+                <Icon name="Maghrib" icon="sunset" time={timings?.Maghrib} colour="#CC5500" bgColor="#E3963E" />
+                <Icon name="Isha" icon="moon" time={timings?.Isha} colour="#301934" bgColor="#C3B1E1" />
+            </View>
+        );
     }
 
     if (loading) {
@@ -110,7 +111,7 @@ function Calendar({ navigation }) {
                 <TouchableOpacity style={{alignSelf: 'flex-start', padding: 15}} onPress={() => navigation.goBack()}>
                     <Text style={{color: '#308695', fontFamily: 'Raleway'}}>Back</Text>
                 </TouchableOpacity>
-                <Text style={{alignSelf: 'center', margin: 20, fontSize: 20, fontFamily: 'Raleway', color: theme.secondary}}>{selected+1} {monthData[month].gregorian.month.en} {monthData[selected].gregorian.year}</Text>
+                <Text style={{alignSelf: 'center', margin: 10, fontSize: 20, fontFamily: 'Raleway', color: theme.secondary}}>{selected+1} {monthData[month].gregorian.month.en} {monthData[selected].gregorian.year}</Text>
                 <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
                     {displayGrid(arr, engArr, holiArr, 0, 7)}
                 </View>
@@ -143,6 +144,11 @@ const styles = StyleSheet.create({
         fontSize: 70,
         fontWeight: '500',
         height: '100%'
+    },
+    icon: {
+        padding: 10,
+        borderRadius: 12,
+        margin: 10
     }
 });
 
