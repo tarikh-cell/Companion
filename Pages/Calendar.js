@@ -90,11 +90,11 @@ function Calendar({ navigation }) {
         return(
             <View style={{justifyContent: 'space-between'}}>
                 <Text style={{alignSelf: 'center', fontFamily: 'Raleway', color: '#308695'}}>{day} {holiArr[selected]}</Text>  
-                <Icon name="Fajr" icon="sunrise" time={timings?.Fajr} colour="#FF69B4" bgColor="pink" />
-                <Icon name="Dhuhr" icon="sun"  time={timings?.Dhuhr} colour="yellow" bgColor="#FFD580" />
-                <Icon name="Asr" icon="cloud" time={timings?.Asr} colour="#0096FF" bgColor="#ADD8E6" />
-                <Icon name="Maghrib" icon="sunset" time={timings?.Maghrib} colour="#CC5500" bgColor="#E3963E" />
-                <Icon name="Isha" icon="moon" time={timings?.Isha} colour="#301934" bgColor="#C3B1E1" />
+                <Icon name="Fajr" icon="sunrise" time={timings?.Fajr} colour="#000" bgColor="#308695" />
+                <Icon name="Dhuhr" icon="sun"  time={timings?.Dhuhr} colour="#000" bgColor="#308695" />
+                <Icon name="Asr" icon="cloud" time={timings?.Asr} colour="#000" bgColor="#308695" />
+                <Icon name="Maghrib" icon="sunset" time={timings?.Maghrib} colour="#000" bgColor="#308695" />
+                <Icon name="Isha" icon="moon" time={timings?.Isha} colour="#000" bgColor="#308695" />
             </View>
         );
     }
@@ -108,9 +108,6 @@ function Calendar({ navigation }) {
         return(
             <View style={[styles.container, {backgroundColor: theme.primary, alignItems: 'stretch'}]}>
                 <StatusBar style="auto" />
-                <TouchableOpacity style={{alignSelf: 'flex-start', padding: 15}} onPress={() => navigation.goBack()}>
-                    <Text style={{color: '#308695', fontFamily: 'Raleway'}}>Back</Text>
-                </TouchableOpacity>
                 <Text style={{alignSelf: 'center', margin: 10, fontSize: 20, fontFamily: 'Raleway', color: theme.secondary}}>{selected+1} {monthData[month].gregorian.month.en} {monthData[selected].gregorian.year}</Text>
                 <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
                     {displayGrid(arr, engArr, holiArr, 0, 7)}

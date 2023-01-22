@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, ActivityIndicator, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView } from 'react-native';
 import { useEffect, useState, useContext } from 'react';
 import SettingsContext from '../SettingsContext';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { colorScheme } from '../components/Color';
 
 export default function Widget() {
@@ -170,7 +170,12 @@ export default function Widget() {
     }
 
     if (loading) {
-        return <ActivityIndicator />;
+        return(
+        <View style={{margin: 10, padding: 30, borderRadius: 25, backgroundColor: theme.primary, width: '80%', elevation: 5, marginBottom: 4, shadowColor: theme.secondary, alignItems: 'center'}}>
+            <MaterialIcons name="wifi-off" size={40} color={theme.secondary} />
+            <Text style={[styles.text, {color: theme.secondary}]}>Enable Wifi to view prayer times.</Text>
+        </View>
+        );
     } else {
       return(
         <View style={styles.card}>

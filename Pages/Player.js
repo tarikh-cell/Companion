@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, Modal, VirtualizedList } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Modal, VirtualizedList } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
@@ -55,6 +55,15 @@ export default function Player() {
         await audio.unloadAsync();
         setPlaying(false);
         setLoaded(false);
+        setPosition(0);
+    }
+
+    const unloadTrack = async () => {
+        await audio.unloadAsync();
+        setPlaying(false);
+        setLoaded(false);
+        setPosition(0);
+        setModalVisible(!modalVisible);
     }
 
     const setNextIndex = (number) => {
@@ -127,44 +136,41 @@ export default function Player() {
             <SurahSelect />
             {/* <Player /> */}
             <Modal animationType="slide"
-                    transparent={false}
+                    transparent={true}
                     visible={modalVisible}
-                    onRequestClose={() => setModalVisible(!modalVisible)}>
-                <View style={{flex: 1, backgroundColor: theme.primary}}>
-                    <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary, borderColor: theme.primary, shadowColor: theme.secondary, alignSelf: 'flex-end', margin: 20}]} onPress={() => {setModalVisible(!modalVisible); setLoaded(false); setPlaying(false); audio.unloadAsync()}}>
-                        <MaterialCommunityIcons name="close" size={30} color={theme.secondary} />
-                    </TouchableOpacity>
-                    <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <TouchableOpacity style={{backgroundColor: theme.primary, elevation: 5, borderRadius: 150, shadowColor: theme.secondary, width: 300, height: 300, margin: 20}}>
-                        <Image source={require("../assets/Sheikh.jpg")} style={styles.img} />
-                    </TouchableOpacity>
-                    <Text style={{fontFamily: 'Raleway', color: theme.secondary}}>Surah {surahNames[index-1].name}</Text>
-                    <Text style={{fontFamily: 'Raleway', color: theme.secondary, marginBottom: 10}}>Sheikh Yasser Al Dosari</Text>
-                    <Slider 
-                        style={{width: '90%', marginTop: 30}}
-                        value={position}
-                        onSlidingComplete={(value) => audio.setPositionAsync(value)}
-                        minimumValue={0}
-                        maximumValue={duration}
-                        thumbTintColor={theme.secondary}
-                        minimumTrackTintColor="grey"
-                        maximumTrackTintColor="silver"
-                    />
-                    <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '80%'}}>
-                        <Text style={{color: theme.secondary}}>{convertToMinutes(position)}</Text>
-                        <Text style={{color: theme.secondary}}>{convertToMinutes(duration)}</Text>
-                    </View>
-                    <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '50%'}}>
-                        <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary, borderColor: theme.primary, shadowColor: theme.secondary }]} onPress={() => {skipTrack(); setNextIndex(index+1)}}>
-                            <Ionicons name="play-skip-back" size={30} color={theme.secondary} />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary, borderColor: theme.primary, shadowColor: theme.secondary }]}>
-                            { playing ? <Ionicons name="pause" size={30} color={theme.secondary} onPress={pauseSound} /> : <Ionicons name="play" size={30} color={theme.secondary} onPress={playSound} /> }
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary, borderColor: theme.primary, shadowColor: theme.secondary }]} onPress={() => {skipTrack(); setNextIndex(index+1)}}>
-                            <Ionicons name="play-skip-forward" size={30} color={theme.secondary} />
-                        </TouchableOpacity>
-                    </View>
+                    onRequestClose={() => {setModalVisible(!modalVisible); unloadTrack()}}>
+                <View style={{flex: 1, backgroundColor: 'rgba(0,0,0,0.5)'}}>
+                    <View style={{alignItems: 'center', padding: 10, backgroundColor: theme.primary, borderBottomEndRadius: 30, borderBottomStartRadius: 30, paddingBottom: 30}}>
+                        <TouchableOpacity style={{ backgroundColor: theme.primary, borderColor: theme.primary, shadowColor: theme.secondary, alignSelf: 'flex-end', marginRight: 20}} onPress={() => unloadTrack()}>
+                            <MaterialCommunityIcons name="close" size={30} color={theme.secondary} />
+                        </TouchableOpacity>   
+                        <Text style={{fontFamily: 'Raleway', color: theme.secondary}}>Surah {surahNames[index-1].name}</Text>
+                        <Text style={{fontFamily: 'Raleway', color: theme.secondary, marginBottom: 10}}>Sheikh Yasser Al Dosari</Text>
+                        <Slider 
+                            style={{width: '90%', marginTop: 30}}
+                            value={position}
+                            onSlidingComplete={(value) => audio.setPositionAsync(value)}
+                            minimumValue={0}
+                            maximumValue={duration}
+                            thumbTintColor={theme.secondary}
+                            minimumTrackTintColor="grey"
+                            maximumTrackTintColor="silver"
+                        />
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between', width: '80%'}}>
+                            <Text style={{color: theme.secondary}}>{convertToMinutes(position)}</Text>
+                            <Text style={{color: theme.secondary}}>{convertToMinutes(duration)}</Text>
+                        </View>
+                        <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', width: '50%'}}>
+                            <TouchableOpacity style={{ backgroundColor: theme.primary, borderColor: theme.primary, shadowColor: theme.secondary }} onPress={() => {skipTrack(); setNextIndex(index+1)}}>
+                                <Ionicons name="play-skip-back" size={30} color={theme.secondary} />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={[styles.button, { backgroundColor: theme.primary, borderColor: theme.primary, shadowColor: theme.secondary }]}>
+                                { playing ? <Ionicons name="pause" size={30} color={theme.secondary} onPress={pauseSound} /> : <Ionicons name="play" size={30} color={theme.secondary} onPress={playSound} /> }
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ backgroundColor: theme.primary, borderColor: theme.primary, shadowColor: theme.secondary }} onPress={() => {skipTrack(); setNextIndex(index+1)}}>
+                                <Ionicons name="play-skip-forward" size={30} color={theme.secondary} />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </Modal>
