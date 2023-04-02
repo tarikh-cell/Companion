@@ -29,16 +29,16 @@ export default function Navigation() {
     }
 
     return (
-      <View style={[styles.container, hide ? open : closed, { backgroundColor: theme.primary } ]}> 
+      <View style={[styles.container, hide ? open : closed]}> 
         { hide ?
         <>
           <Item route="Reader" name="book" index={1} />
-          <Item route="Player" name="meter" index={2} />
+          <Item route="Player" name="play" index={2} />
           <Item route="Home" name="home" index={0} />
           <Item route="Calendar" name="calendar" index={3}  />
         </>
          : null }
-        <CloseItem name="stack" alt="grabber" />
+          <CloseItem name="stack" alt="grabber" />
       </View>
     );
 }

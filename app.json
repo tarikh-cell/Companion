@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "Companion",
-    "slug": "Companion",
-    "version": "1.0.0",
+    "slug": "Athan",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -12,7 +12,8 @@
       "backgroundColor": "#000000"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "fallbackToCacheTimeout": 0,
+      "url": "https://u.expo.dev/dba3bdd5-be97-4872-bd3f-6f987cda822d"
     },
     "assetBundlePatterns": [
       "**/*"
@@ -24,10 +25,20 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#000000"
-      }
+      },
+      "package": "com.gmail.tarikhmukhtar.www.companion",
+      "versionCode": 3
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "dba3bdd5-be97-4872-bd3f-6f987cda822d"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
     }
   }
 }

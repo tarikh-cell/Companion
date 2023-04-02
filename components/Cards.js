@@ -22,7 +22,7 @@ function Cards() {
 
     const Name = () => {
         return(
-            <View style={[styles.card, {backgroundColor: theme.primary, shadowColor: theme.secondary, flexDirection: 'row'}]}>
+            <View style={[styles.card, {backgroundColor: theme.primary, shadowColor: theme.secondary, flexDirection: 'row', maxWidth: '70%', flexWrap: 'wrap'}]}>
                 <Text style={styles.text}>{names[random]}</Text>
                 <Text><Text style={{color: theme.secondary}}>{husna[random].translation}</Text>{"\n"}<Text style={{fontSize: 12, color: '#308695'}}>{husna[random].transliteration}</Text></Text>
             </View>
